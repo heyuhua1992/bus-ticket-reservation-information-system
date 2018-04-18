@@ -1,0 +1,34 @@
+{
+  "NavContent": [
+    {
+      "title": "主站",
+      "to": "https://www.baidu.com",
+      "icon": ""
+    },
+    {
+      "title": "画友",
+      "to": "https://www.baidu.com",
+      "icon": ""
+    },
+    {
+      "title": "游戏中心",
+      "to": "https://www.baidu.com",
+      "icon": ""
+    },
+    {
+      "title": "直播",
+      "to": "https://www.baidu.com",
+      "icon": ""
+    },
+    {
+      "title": "会员购",
+      "to": "https://www.baidu.com",
+      "icon": ""
+    },
+    {
+      "title": "下载APP",
+      "to": "https://www.baidu.com",
+      "icon": ""
+    }
+  ]
+}

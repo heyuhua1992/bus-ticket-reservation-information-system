@@ -9,10 +9,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const superagent = require('superagent')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
-
+const response = require('../db/db')
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -22,6 +23,18 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    before(app) {
+      app.get('/db', (req, res) => {
+        // superagent拿不到本地的数据，可以在开发的时候跨域获取数据，生产的时候不行
+        // superagent.get("static/db")
+        //   .buffer(true)
+        //   .end((error, response) => {
+        //     console.log(response)
+        //     res.json({data: response})
+        //   })
+        res.json({data: response})
+      })
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
