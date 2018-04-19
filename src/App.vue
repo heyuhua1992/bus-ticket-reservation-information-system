@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Login :data="data"/>
+    <Login />
   </div>
 </template>
 
@@ -12,17 +12,6 @@ export default {
     return {
       data: {}
     }
-  },
-  beforeCreate () {
-    this.$axios.get('/db')
-      .then(rep => {
-        if (rep.statusText === 'OK') {
-          this.data = rep.data.data
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
   },
   components: {
     Login

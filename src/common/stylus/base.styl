@@ -5,6 +5,8 @@ body,html
 
 .clearfix
   display inline-block
+  overflow hidden
+  zoom 1
   &:after
     content ''
     display block
@@ -19,6 +21,17 @@ body,html
   float left
 .fr
   float right
+
+
+a,
+a:hover
+  text-decoration none
+a
+  transition color .2s
+a:-webkit-any-link
+  color -webkit-link
+  cursor pointer
+
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5)
   .border-1px
     &::after

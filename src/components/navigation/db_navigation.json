@@ -1,0 +1,96 @@
+{
+  "NavContentLeft": [
+    {
+      "title": "主站",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "title": "画友",
+      "to": "/h",
+      "icon": ""
+    },
+    {
+      "title": "游戏中心",
+      "to": "/game",
+      "icon": ""
+    },
+    {
+      "title": "直播",
+      "to": "/live",
+      "icon": ""
+    },
+    {
+      "title": "会员购",
+      "to": "/show",
+      "icon": ""
+    },
+    {
+      "title": "下载APP",
+      "to": "/app",
+      "icon": ""
+    }
+  ],
+  "NavContentRight": [
+    {
+      "title": "大会员",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "title": "消息",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "title": "动态",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "title": "稍后再看",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "title": "收藏夹",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "title": "历史",
+      "to": "/",
+      "icon": ""
+    }
+  ],
+  "Face":{
+    "src": "http://i1.hdslb.com/bfs/face/3d09e4441e15021974ea1d76de8cf9e0c65f1bed.jpg@72w_72h.webp"
+  },
+  "MemberMenu":[
+    {
+      "text": "个人中心",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "text": "投稿管理",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "text": "B币中心",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "text": "直播中心",
+      "to": "/",
+      "icon": ""
+    },
+    {
+      "text": "订单红线",
+      "to": "/",
+      "icon": ""
+    }
+  ]
+}

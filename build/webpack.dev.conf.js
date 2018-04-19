@@ -13,7 +13,8 @@ const superagent = require('superagent')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
-const response = require('../db/db')
+const response = require('../src/components/navigation/db_navigation')
+
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })

@@ -2,7 +2,6 @@
 <div id="login">
   <Navigation />
   <div>
-
   </div>
 </div>
 </template>
