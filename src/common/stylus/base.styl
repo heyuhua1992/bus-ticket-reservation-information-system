@@ -1,19 +1,15 @@
 body,html
-  line-height 1
-  font-weight 200
-  font-family 'PingFan SC','STHeitiSC-Ligth','Helvetica-Light',arial,sans-serif
+  font 12px Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif
 
 .clearfix
-  display inline-block
-  overflow hidden
   zoom 1
-  &:after
+  &:after, &:before
     content ''
-    display block
-    height 0
-    line-height 0
+    display table
+  &:after
     clear both
-    visibility hidden
+    display table
+    overflow hidden
 .fl,
 .fr
   display inline
