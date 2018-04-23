@@ -1,11 +1,13 @@
 <template>
-<div id="login" :class="{'blur-black': hasBlur}">
-  <ul class="fr">
+<div id="loginlogout">
+  <ul class="fr" v-if="isLogin">
     <li class="nav-item face-wrapper"
         @mouseover="isOn = true"
         @mouseout="isOn = false"
         :class="{on:isOn}">
-      <router-link class="t" to="/" ref="faceLink">
+      <router-link class="t"
+                   to="/"
+                   ref="faceLink">
         <div class="i-face">
           <img class="face"
                v-if="db_navigation.Img"
@@ -76,9 +78,39 @@
         v-for="(item, index) in db_navigation.NavContentRight"
         :key="index">
       <router-link class="t"
+                   :class="{'font-white': fontColor}"
                    :to="item.to">
         {{ item.title }}
       </router-link>
+    </li>
+  </ul>
+  <ul class="fr" v-else>
+    <li class="nav-item face-wrapper"
+        @mouseover="isOn = true"
+        @mouseout="isOn = false">
+      <router-link class="t"
+                   to="/"
+                   ref="faceLink">
+        <div class="i-face">
+          <img class="face"
+               src="./png/logout.jpg"/>
+        </div>
+      </router-link>
+      <transition name="fade">
+        <div class="login" v-show="isOn">
+          <div class="img"></div>
+          <router-link class="login-btn"
+                       to="/">
+            登陆
+          </router-link>
+          <p class="reg">
+            <span>首次使用？</span>
+            <router-link to="/">
+              点我去注册
+            </router-link>
+          </p>
+        </div>
+      </transition>
     </li>
   </ul>
 </div>
@@ -86,13 +118,22 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'loginlogout',
   props: {
     db_navigation: {
       type: Object
     },
     hasBlur: {
-      type: Boolean
+      type: Boolean,
+      default: false
+    },
+    fontColor: {
+      type: Boolean,
+      default: false
+    },
+    isLogin: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -100,13 +141,12 @@ export default {
       isOn: false
     }
   },
-  methods: {
-  }
+  methods: {}
 }
 </script>
 
 <style lang="stylus" scoped>
-#login
+#loginlogout
   .nav-item
     float left
     text-align center
@@ -125,6 +165,8 @@ export default {
       height 100%
       display block
       padding 0 11px
+      &.font-white:nth-of-type(n + 1)
+        color #fff
   .face-wrapper
     width 58px
     margin-left 0
@@ -287,4 +329,42 @@ export default {
       &.fade-enter,
       &.fade-leave-to
         opacity 0
+#loginlogout
+  .nav-item
+    &:hover
+      background none
+    .login
+      background #fff
+      padding-bottom 0
+      padding-top 50px
+      border-top none
+      width 320px
+      margin-left -140px
+      padding 12px
+      text-align left
+      line-height normal
+      border 1px solid #e5e9ef
+      .img
+        width 320px
+        height 200px
+        margin 12px 0
+        overflow hidden
+        position relative
+        background url("./png/danmu.png") no-repeat 50%
+      .login-btn
+        display block
+        height 43px
+        line-height 43px
+        text-align center
+        background #00a1d6
+        border-radius 4px
+        font-size 14px
+        color #fff
+      .reg
+        margin-top 8px
+        text-align center
+        font-size 12px
+        color #282828
+        a
+          color #00a1d6
 </style>

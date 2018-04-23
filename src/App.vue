@@ -1,20 +1,24 @@
 <template>
   <div id="app">
-    <Login />
+    <Navigation :hasBlur="hasBlur"
+                :fontColor="fontColor"
+                :isLogin="isLogin"/>
   </div>
 </template>
 
 <script>
-import Login from '@/components/login/Login'
+import Navigation from '@/components/navigation/Navigation'
 export default {
   name: 'App',
   data () {
     return {
-      data: {}
+      hasBlur: true, // 是否需要背景图片、背景模糊，默认为false
+      fontColor: false, // true 为白色，false为黑色, 默认为false
+      isLogin: false // 是否登陆
     }
   },
   components: {
-    Login
+    Navigation
   }
 }
 </script>

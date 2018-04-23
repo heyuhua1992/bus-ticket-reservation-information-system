@@ -1,6 +1,6 @@
 <template>
 <div id="navigation">
-  <div class="nav-menu" :class="{'blur-black': hasBlur}">
+  <div class="nav-menu">
     <div class="blur-bg"
          v-if="hasBlur && db_navigation.Img"
          :style="{backgroundImage: `url(${db_navigation.Img.bg})`}"></div>
@@ -12,6 +12,7 @@
               v-for="(item, index) in db_navigation.NavContentLeft"
               :key="index">
             <router-link class="t"
+                         :class="{'font-white': fontColor}"
                          :to="item.to" >
               <i v-if="item.icon">这里放图标</i>
               {{ item.title }}
@@ -20,10 +21,10 @@
         </ul>
       </div>
       <div class="nav-content fr">
-        <Login :hasBlur="hasBlur"
-               :db_navigation="db_navigation"
-               v-if="true"/>
-        <Logout v-else />
+        <LoginLogout :hasBlur="hasBlur"
+                     :fontColor="fontColor"
+                     :db_navigation="db_navigation"
+                     :isLogin="isLogin"/>
       </div>
     </div>
   </div>
@@ -33,15 +34,27 @@
 </template>
 
 <script>
-import Login from './Login'
-import Logout from './Logout'
+import LoginLogout from './LoginLogout'
 import BannerLink from './BannerLink'
 export default {
   name: 'navigation',
+  props: {
+    hasBlur: {
+      type: Boolean,
+      default: false
+    },
+    fontColor: {
+      type: Boolean,
+      default: false
+    },
+    isLogin: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      db_navigation: {},
-      hasBlur: true
+      db_navigation: {}
     }
   },
   created () {
@@ -56,8 +69,7 @@ export default {
       })
   },
   components: {
-    Login,
-    Logout,
+    LoginLogout,
     BannerLink
   }
 }
@@ -117,4 +129,6 @@ export default {
             height 100%
             display block
             padding 0 11px
+            &.font-white
+              color #fff
 </style>
