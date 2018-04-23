@@ -1,10 +1,14 @@
 <template>
-<div></div>
+<div id="logout">
+  <ul>
+    <li></li>
+  </ul>
+</div>
 </template>
 
 <script>
 export default {
-  name: 'navigation-logout'
+  name: 'logout'
 }
 </script>
 

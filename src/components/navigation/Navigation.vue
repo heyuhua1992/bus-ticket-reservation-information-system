@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus" scoped>
+<style lang="stylus" scoped>
 #navigation
   position relative
   z-index 1000
@@ -83,14 +83,15 @@ export default {
       position absolute
       top 0
       left 0
-      right 0
+      width 100%
       height 100%
-      background-color hsla(0,0%,100%,.4)
-      box-shadow 0 1px 2px rgba(0,0,0,.1)
     .blur-bg
       background-position center -10px
       background-repeat no-repeat
       filter blur(4px)
+    .nav-mark
+      background-color hsla(0,0%,100%,.4)
+      box-shadow 0 1px 2px rgba(0,0,0,.1)
     .nav-wrapper
       width 1160px
       margin 0 auto
