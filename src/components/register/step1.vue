@@ -52,7 +52,7 @@
              @click="nextStep"
              value="注册">
       <div class="register-hidden-gruop text-right">
-        <a href="/login">已有账号，直接登录></a>
+        <router-link to="/login">已有账号，直接登录></router-link>
       </div>
     </div>
   </div>
