@@ -19,3 +19,15 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+#在package.json的script》dev的引号中加入 --host 现在的IP（如：192.168.1.5）
+#就可以通过192.168.1.5:8080打开了
+
+#引用了：
+vee-validate
+axios
+superagent
+vue-router
+vuex
+stylus
+stylus-loader

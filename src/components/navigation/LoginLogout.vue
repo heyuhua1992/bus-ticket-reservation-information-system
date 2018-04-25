@@ -100,12 +100,12 @@
         <div class="login" v-show="isOn">
           <div class="img"></div>
           <router-link class="login-btn"
-                       to="/">
+                       to="/login">
             登陆
           </router-link>
           <p class="reg">
             <span>首次使用？</span>
-            <router-link to="/">
+            <router-link to="/register">
               点我去注册
             </router-link>
           </p>

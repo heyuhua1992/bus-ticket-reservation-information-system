@@ -2,8 +2,7 @@
 <div id="navigation">
   <div class="nav-menu">
     <div class="blur-bg"
-         v-if="hasBlur && db_navigation.Img"
-         :style="{backgroundImage: `url(${db_navigation.Img.bg})`}"></div>
+         v-if="hasBlur"></div>
     <div class="nav-mark"></div>
     <div class="nav-wrapper clearfix">
       <div class="nav-content fl">
@@ -98,6 +97,7 @@ export default {
       width 100%
       height 100%
     .blur-bg
+      background-image url("./png/bg.png")
       background-position center -10px
       background-repeat no-repeat
       filter blur(4px)

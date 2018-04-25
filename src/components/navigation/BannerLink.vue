@@ -1,8 +1,6 @@
 <template>
 <div id="banner-link">
-  <div class="head-banner"
-       v-if="db_navigation.Img"
-       :style="{backgroundImage: `url(${db_navigation.Img.bg})`}">
+  <div class="head-banner">
     <div class="head-content">
       <transition name="fade">
         <p class="head-title"
@@ -39,6 +37,7 @@ export default {
     height 170px
     margin-top -42px
     background-color #eee
+    background-image url("./png/bg.png")
     background-position center -10px
     background-repeat no-repeat
     &:hover

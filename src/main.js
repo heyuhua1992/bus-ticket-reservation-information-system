@@ -5,6 +5,7 @@ import App from './App'
 import axios from 'axios'
 import Router from './vue-router/vue-router'
 import Vuex from './vuex/vuex'
+import './vee-validate/VeeValidate'
 import '@/common/stylus/index'
 
 Vue.config.productionTip = false

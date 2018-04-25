@@ -5,7 +5,19 @@ Vue.use(VueRouter)
 
 let routes = [
   {
-    path: '/'
+    path: '/',
+    // 懒加载
+    component: () => import('@/components/home/Home'),
+    // 缓存vue的组件信息，使其不再重新加载。
+    meta: {keepAlive: true}
+  },
+  {
+    path: '/login',
+    component: () => import('@/components/login/Login')
+  },
+  {
+    path: '/register',
+    component: () => import('@/components/register/Register')
   }
 ]
 export default new VueRouter({
