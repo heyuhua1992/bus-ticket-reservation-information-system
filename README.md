@@ -31,4 +31,3 @@ vue-router
 vuex
 stylus
 stylus-loader
-使用极验校验 安装了 body-parser express supervisor express-session request gt3-sdk 组件

@@ -4,12 +4,12 @@
   <div class="retrieve-tab">
     <div class="retrieve-password">
       <div class="retrieve"
-           :class="{'retrieve-currtent' : activeMobile}"
+           :class="{'retrieve-currtent' : targger}"
            @click="activeMobile = true">
         通过绑定的手机找回密码
       </div>
       <div class="retrieve"
-           :class="{'retrieve-currtent' : !activeMobile}"
+           :class="{'retrieve-currtent' : !targger}"
            @click="activeMobile = false">
         通过绑定的邮箱找回密码
       </div>
@@ -19,28 +19,55 @@
   <div class="verify-content" v-show="activeMobile">
     <div>
       <div class="box">
-        <input class="password" type="text" placeholder="请输入手机号码">
+        <input class="inputbox"
+               type="text"
+               placeholder="请输入手机号码"
+               maxlength="20"
+               v-validate="{required: true, regex: /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/ }"
+               name="phone"
+               ref="phone"
+               autocomplete="off">
+        <div class="text clearfix">
+          <p class="tips" v-show="errors.has('phone')">
+            {{ errors.first('phone') }}
+          </p>
+        </div>
       </div>
       <div class="box">
-        <input class="code" type="text" placeholder="验证码">
-        <img class="yzm">
-        <p>换一张</p>
+        <input class="code" type="text" placeholder="验证码" v-model="inputIdentifyCode">
+        <SIdentify class="yzm"
+                   v-if="activeMobile"
+                   :identifyCode="identifyCode"/>
+        <p class="change" @click="refreshCode">换一张</p>
       </div>
-      <input class="login" type="submit" value="发送到手机">
+      <input class="send" type="submit" value="发送到手机" @click="sendMobile">
       <router-link to="/login" class="no-account">返回登陆</router-link>
     </div>
   </div>
   <div class="verify-content" v-show="!activeMobile">
     <div>
       <div class="box">
-        <input class="password" type="text" placeholder="请输入邮箱">
+        <input class="inputbox"
+               type="text"
+               placeholder="请输入邮箱"
+               v-validate="{required: true, email: true}"
+               name="email"
+               ref="email"
+               autocomplete="off">
+        <div class="text clearfix">
+          <p class="tips" v-show="errors.has('email')">
+            {{ errors.first('email') }}
+          </p>
+        </div>
       </div>
       <div class="box">
-        <input class="code" type="text" placeholder="验证码">
-        <img class="yzm">
-        <p>换一张</p>
+        <input class="code" type="text" placeholder="验证码" v-model="inputIdentifyCode">
+        <SIdentify class="yzm"
+                   v-if="!activeMobile"
+                   :identifyCode="identifyCode"/>
+        <p class="change" @click="refreshCode">换一张</p>
       </div>
-      <input class="login" type="submit" value="发送到验证邮箱">
+      <input class="send" type="submit" value="发送到验证邮箱" @click="sendEmail">
       <router-link to="/login" class="no-account">返回登陆</router-link>
     </div>
   </div>
@@ -49,17 +76,79 @@
 
 <script>
 import TopBanner from '@/components/topBanner/TopBanner'
+import SIdentify from '@/components/identify/Identify'
 export default {
   name: 'forget-password',
   data () {
     return {
-      activeMobile: true
+      activeMobile: true,
+      identifyCodes: '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      identifyCode: '',
+      inputIdentifyCode: ''
     }
   },
+  mounted () {
+    this.identifyCode = ''
+    this.makeCode(this.identifyCodes, 4)
+  },
   methods: {
+    // 生成一个随机数
+    randomNum (min, max) {
+      return Math.floor(Math.random() * (max - min) + min)
+    },
+    refreshCode () {
+      this.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
+    },
+    makeCode (o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode += this.identifyCodes[this.randomNum(0, this.identifyCodes.length)]
+      }
+    },
+    initCode () {
+      this.inputIdentifyCode = ''
+    },
+    sendMobile () {
+      let identifyCode = this.identifyCode.toLowerCase()
+      let inputIdentifyCode = this.inputIdentifyCode.toLowerCase()
+      let _pho = this.$validator.flags.phone
+      if (identifyCode === inputIdentifyCode && _pho && _pho.valid) {
+        alert('发送成功')
+      }
+      if (inputIdentifyCode.length > 0 && identifyCode !== inputIdentifyCode) {
+        alert('验证码输入错误')
+        this.refreshCode()
+      }
+      if (_pho && _pho.valid && inputIdentifyCode.length === 0) {
+        alert('请输入验证码')
+      }
+    },
+    sendEmail () {
+      let identifyCode = this.identifyCode.toLowerCase()
+      let inputIdentifyCode = this.inputIdentifyCode.toLowerCase()
+      let _eml = this.$validator.flags.email
+      if (identifyCode === inputIdentifyCode && _eml && _eml.valid) {
+        alert('发送成功')
+      }
+      if (inputIdentifyCode.length > 0 && identifyCode !== inputIdentifyCode) {
+        alert('验证码输入错误')
+        this.refreshCode()
+      }
+      if (_eml && _eml.valid && inputIdentifyCode.length === 0) {
+        alert('请输入验证码')
+      }
+    }
+  },
+  computed: {
+    targger () {
+      this.refreshCode()
+      this.initCode()
+      return this.activeMobile
+    }
   },
   components: {
-    TopBanner
+    TopBanner,
+    SIdentify
   }
 }
 </script>
@@ -93,7 +182,7 @@ export default {
     .box
       position relative
       overflow hidden
-      .password
+      .inputbox
         width 388px
         height 18px
         padding 10px 0 10px 10px
@@ -102,11 +191,20 @@ export default {
         color #aaa
         font-size 14px
         outline 0
+      .text
+        margin 6px 0
+        font-size 12px
+        height 20px
+        line-height 20px
+        .tips
+          display block
+          color #f66495
+          float left
       .code
         position relative
         width 170px
         height 18px
-        margin-top 30px
+        margin-top 10px
         margin-right 235px
         padding 10px 0 10px 10px
         border 1px solid #ddd
@@ -120,19 +218,19 @@ export default {
         height 30px
         position absolute
         left 190px
-        top 30px
+        top 10px
         margin-top 4px
-        border 1px solid #dfdfdf
+        border none
         vertical-align middle
-      p
+      .change
         position absolute
         font-size 12px
         color #00a0d8
         right 52px
-        top 31px
+        top 11px
         margin-top 10px
         cursor pointer
-    .login
+    .send
       display block
       height 38px
       width 398px
