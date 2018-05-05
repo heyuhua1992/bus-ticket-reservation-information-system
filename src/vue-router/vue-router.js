@@ -18,6 +18,10 @@ let routes = [
   {
     path: '/register',
     component: () => import('@/components/register/Register')
+  },
+  {
+    path: '/forgetpassword',
+    component: () => import('@/components/forgetPassword/ForgetPassword')
   }
 ]
 export default new VueRouter({

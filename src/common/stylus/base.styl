@@ -20,13 +20,14 @@ body,html
 
 
 a,
-a:hover
+a:hover, a:visited, a:link, a:active
   text-decoration none
 a
   transition color .2s
-a:-webkit-any-link
-  color -webkit-link
-  cursor pointer
+
+@media screen and (max-width: 1400px)
+  .wrapper
+    width 980px
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5)
   .border-1px

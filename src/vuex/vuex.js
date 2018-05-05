@@ -18,6 +18,9 @@ const getters = {}
 const actions = {
   Login ({commit}) {
     commit('Login')
+  },
+  checkValidate ({commit}, data) {
+    commit('checkValidate', data)
   }
 }
 // 操作状态变化
@@ -29,6 +32,13 @@ const mutations = {
   },
   hasBlur (state, type) {
     state.hasBlur = type
+  },
+  checkValidate (state, data) {
+    if (data) {
+      console.log('正在向后台验证用户信息')
+    } else {
+      console.log('手机号码、密码输入有误')
+    }
   }
 }
 

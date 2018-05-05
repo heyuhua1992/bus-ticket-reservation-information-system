@@ -30,6 +30,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../../common/stylus/mixin.styl";
 #banner-link
   .head-banner
     position relative
@@ -50,10 +51,7 @@ export default {
     .head-content
           position relative
           height 170px
-          width 1160px
-          margin 0 auto
-          @media screen and (max-width 1400px)
-            width 980px
+          warpper()
           .head-title
             position absolute
             top 114px

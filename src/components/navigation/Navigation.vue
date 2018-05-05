@@ -75,6 +75,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../../common/stylus/mixin.styl";
 #navigation
   position relative
   z-index 1000
@@ -105,10 +106,7 @@ export default {
       background-color hsla(0,0%,100%,.4)
       box-shadow 0 1px 2px rgba(0,0,0,.1)
     .nav-wrapper
-      width 1160px
-      margin 0 auto
-      @media screen and (max-width: 1400px)
-        width 980px
+      wrapper()
       .nav-content
         .nav-item
           text-align center

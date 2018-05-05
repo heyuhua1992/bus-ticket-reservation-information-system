@@ -31,7 +31,11 @@
             </p>
           </div>
         </li>
-        <li class="gc"></li>
+        <li class="gc clearfix">
+          <div class="gc-box">
+            <GeetestNode v-show="isOk" ref="getResult"/>
+          </div>
+        </li>
         <li class="remember">
           <label>
             <input type="checkbox"/>记住我
@@ -41,11 +45,13 @@
           </label>
         </li>
         <li class="btn-box">
-          <a class="btn btn-login">
+          <a class="btn btn-login"
+             ref="btnLogin"
+             @click="checkValidate">
             登陆
           </a>
-          <router-link  class="btn btn-reg"
-                        to="/register">
+          <router-link class="btn btn-reg"
+                       to="/register">
             注册
           </router-link>
         </li>
@@ -58,11 +64,34 @@
 <script>
 import TopBanner from '@/components/topBanner/TopBanner'
 import TitleLine from '@/components/titleLine/TitleLine'
+import GeetestNode from '@/components/geetestNode/GeetestNode'
 export default {
   name: 'login',
+  methods: {
+    // 获取人机验证
+    checkValidate () {
+      if (this.isOk) {
+        let data = this.$refs.getResult.result
+        this.$store.dispatch('checkValidate', data)
+      }
+    }
+  },
+  computed: {
+    // 检测手机号、密码是否全部正确
+    isOk () {
+      let _pho = this.$validator.flags.phone
+      let _psw = this.$validator.flags.password
+      if (_pho && !_pho.valid) {
+        return false
+      } else if (_pho && _pho.valid && _psw && _psw.valid) {
+        return true
+      }
+    }
+  },
   components: {
     TopBanner,
-    TitleLine
+    TitleLine,
+    GeetestNode
   }
 }
 </script>
@@ -102,6 +131,10 @@ export default {
           display block
           color #f66495
           float left
+    .gc
+      margin-bottom 16px
+      .gc-box
+        height 44px
     .remember
       margin 10px 0
       color #717171
