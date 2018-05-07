@@ -5,30 +5,53 @@
     <ul class="search">
       <li class="label">
         <span class="span-left">出发城市</span>
-        <div>
-          <input class="txt-input" type="text" placeholder="中文/拼音/首字母">
+        <div class="input-box">
+          <input class="txt-input"
+                 type="text"
+                 v-model="leaveCity"
+                 @focus="setLeaveCityBox(true)"
+                 @blur="focusInput = false"
+                 placeholder="中文/拼音/首字母">
+        </div>
+        <div @mouseover="setHover(true)"
+             @mouseout="setHover(false)"
+             @click.stop
+             v-show="leaveCityBox">
+          <SwitchCity :cityType="'leave'" @setInputText="setInputText"/>
         </div>
       </li>
       <li class="label">
         <span class="span-left">到达城市</span>
-        <div>
-          <input class="txt-input" type="text" placeholder="中文/拼音/首字母">
+        <div class="input-box">
+          <input class="txt-input"
+                 type="text"
+                 v-model="arriveCity"
+                 @focus="setArriveCityBox(true)"
+                 @blur="focusInput = false"
+                 placeholder="中文/拼音/首字母">
+        </div>
+        <div @mouseover="setHover(true)"
+             @mouseout="setHover(false)"
+             @click.stop
+             v-show="arriveCityBox">
+          <SwitchCity :cityType="'arrive'" @setInputText="setInputText"/>
         </div>
       </li>
       <li class="label">
         <span class="span-left">出发日期</span>
-        <div>
-          <input class="txt-input" type="text" readonly="readonly">
-          <span class="txt-day">今天</span>
+        <div class="input-box">
+          <Datepicker @showDay="showDay"/>
+          <!--<input class="txt-input" type="text" readonly="readonly">-->
+          <span class="txt-day">{{nowSlectedDay}}</span>
         </div>
       </li>
       <li class="label">
         <span class="span-left"></span>
-        <div>
+        <div class="input-box">
           <input class="search-btn" type="button" value="汽车票查询">
         </div>
       </li>
-      <li class="exchange">
+      <li class="exchange" @click="toggle">
         <em>换</em>
       </li>
       <li class="history">
@@ -49,6 +72,8 @@
 
 <script>
 import SlidePic from '@/components/slidePic/SlidePic'
+import SwitchCity from '@/components/switchCity/SwitchCity'
+import Datepicker from '@/components/datepicker/Datepicker'
 export default {
   name: 'home',
   beforeRouteEnter (to, from, next) {
@@ -63,6 +88,14 @@ export default {
     this.$store.commit('hasBlur', false)
     next()
   },
+  beforeCreate () {
+    document.addEventListener('click', () => {
+      if (!this.boxHover && !this.focusInput && (this.leaveCityBox || this.arriveCityBox)) {
+        this.leaveCityBox = false
+        this.arriveCityBox = false
+      }
+    })
+  },
   data () {
     return {
       allPage: {
@@ -76,12 +109,64 @@ export default {
             href: 'http://fanyi.youdao.com/'
           }
         ],
-        num: 2
-      }
+        num: 2 // 有多少滑动图片 (直接取pageArr的长度好像有点问题？)
+      },
+      leaveCity: '',
+      arriveCity: '',
+      leaveCityBox: false, // 是否显示出发城市的选择框
+      arriveCityBox: false, // 是否显示到达城市的选择框
+      boxHover: false, // 鼠标有没有在选择框里面
+      focusInput: false, // 是否已经聚焦
+      nowSlectedDay: '今天'
     }
   },
+  methods: {
+    setHover (hover) {
+      this.boxHover = hover
+    },
+    setLeaveCityBox (state) {
+      this.initBox()
+      if (state) {
+        this.focusInput = true
+      }
+      this.leaveCityBox = state
+    },
+    setArriveCityBox (state) {
+      this.initBox()
+      if (state) {
+        this.focusInput = true
+      }
+      this.arriveCityBox = state
+    },
+    initBox () {
+      this.leaveCityBox = false
+      this.arriveCityBox = false
+      this.boxHover = false
+      this.focusInput = false
+    },
+    toggle () {
+      [this.arriveCity, this.leaveCity] = [this.leaveCity, this.arriveCity]
+    },
+    setInputText (type, val) {
+      if (type === 'leave') {
+        this.leaveCity = val
+        this.initBox()
+      }
+      if (type === 'arrive') {
+        this.arriveCity = val
+        this.initBox()
+      }
+    },
+    showDay (state) { // 显示 《今天》 这个词
+      this.nowSlectedDay = state
+    }
+  },
+  computed: {
+  },
   components: {
-    SlidePic
+    SlidePic,
+    SwitchCity,
+    Datepicker
   }
 }
 </script>
@@ -123,7 +208,7 @@ export default {
           color #666
           width 90px
           float left
-        div
+        .input-box
           float left
           position relative
           .txt-input
@@ -154,6 +239,7 @@ export default {
             font-size 20px
             border-radius 3px
             cursor pointer
+            outline 0
       .exchange
         width 30px
         height 54px
