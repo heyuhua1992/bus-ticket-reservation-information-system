@@ -35,6 +35,7 @@
 <script>
 import LoginLogout from './LoginLogout'
 import BannerLink from './BannerLink'
+const DBData = require('./db_navigation')
 export default {
   name: 'navigation',
   props: {
@@ -53,19 +54,8 @@ export default {
   },
   data () {
     return {
-      db_navigation: {}
+      db_navigation: DBData
     }
-  },
-  created () {
-    this.$axios.get('/db')
-      .then(rep => {
-        if (rep.statusText === 'OK') {
-          this.db_navigation = rep.data.data
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
   },
   components: {
     LoginLogout,

@@ -64,7 +64,7 @@
     }
   ],
   "Img":{
-    "face": "http://i1.hdslb.com/bfs/face/3d09e4441e15021974ea1d76de8cf9e0c65f1bed.jpg@72w_72h.webp"
+    "face": "./png/吃药.gif"
   },
   "MemberMenu": [
     {

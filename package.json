@@ -19,6 +19,7 @@
     "vue-concise-slider": "^2.4.8",
     "vue-router": "^3.0.1",
     "vuejs-datepicker": "^1.1.4",
+    "vuejs-paginate": "^1.9.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

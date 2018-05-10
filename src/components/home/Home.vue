@@ -40,7 +40,7 @@
       <li class="label">
         <span class="span-left">出发日期</span>
         <div class="input-box">
-          <Datepicker @showDay="showDay"/>
+          <Datepicker @showDay="showDay" @setStartDateTime="setStartDateTime"/>
           <!--<input class="txt-input" type="text" readonly="readonly">-->
           <span class="txt-day">{{nowSlectedDay}}</span>
         </div>
@@ -48,7 +48,9 @@
       <li class="label">
         <span class="span-left"></span>
         <div class="input-box">
-          <input class="search-btn" type="button" value="汽车票查询">
+          <a class="search-btn" ref="toBusList" @click="sendMsg">
+            汽车票查询
+          </a>
         </div>
       </li>
       <li class="exchange" @click="toggle">
@@ -113,6 +115,7 @@ export default {
       },
       leaveCity: '',
       arriveCity: '',
+      startDateTime: this.setStartDateTime(new Date()),
       leaveCityBox: false, // 是否显示出发城市的选择框
       arriveCityBox: false, // 是否显示到达城市的选择框
       boxHover: false, // 鼠标有没有在选择框里面
@@ -159,6 +162,20 @@ export default {
     },
     showDay (state) { // 显示 《今天》 这个词
       this.nowSlectedDay = state
+    },
+    setStartDateTime (date) {
+      this.startDateTime = date.toLocaleDateString().replace(/\//g, '-')
+      return this.startDateTime
+    },
+    sendMsg () {
+      if (this.leaveCity && this.arriveCity && this.startDateTime) {
+        let params = {
+          startname: this.leaveCity,
+          arrivename: this.arriveCity,
+          startdatetime: this.startDateTime
+        }
+        this.$router.push({path: '/buslist', query: params})
+      }
     }
   },
   computed: {
@@ -230,9 +247,11 @@ export default {
             font-size 14px
             line-height 34px
           .search-btn
+            display block
             width 250px
             height 40px
             line-height 40px
+            text-align center
             background #ff5346
             border 0 none
             color #fff

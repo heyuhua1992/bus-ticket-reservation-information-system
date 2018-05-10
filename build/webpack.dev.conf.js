@@ -24,16 +24,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   // these devServer options should be customized in /config/index.js
   devServer: {
     before(app) {
-      app.get('/db', (req, res) => {
-        // superagent拿不到本地的数据，可以在开发的时候跨域获取数据，生产的时候不行
-        // superagent.get("static/db")
-        //   .buffer(true)
-        //   .end((error, response) => {
-        //     console.log(response)
-        //     res.json({data: response})
-        //   })
-        res.json({data: require('../src/components/navigation/db_navigation')})
-      })
       app.get('/gt/register-fullpage', (req, res) => {
         // superagent拿不到本地的数据，可以在开发的时候跨域获取数据，生产的时候不行
         superagent.get('http://localhost:9977/gt/register-fullpage?t=' + (new Date()).getTime())

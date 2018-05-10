@@ -78,6 +78,7 @@ export default {
         sendData = weekArr[week]
       }
       this.$emit('showDay', sendData)
+      this.$emit('setStartDateTime', this.selectedDate)
     }
   },
   components: {

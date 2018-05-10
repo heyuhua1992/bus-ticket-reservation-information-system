@@ -22,6 +22,10 @@ let routes = [
   {
     path: '/forgetpassword',
     component: () => import('@/components/forgetPassword/ForgetPassword')
+  },
+  {
+    path: '/buslist',
+    component: () => import('@/components/busList/BusList')
   }
 ]
 export default new VueRouter({
