@@ -228,8 +228,8 @@
           <p class="price">票价</p>
         </div>
         <ul class="list">
-          <li class="row" v-for="n in 10" :key="'list' + n">
-            <div class="dp-time">06:20</div>
+          <li class="row" v-for="n in pageMsg.liNumber" :key="'row' + n">
+            <div class="dp-time">{{ pageMsg.currentPage > 3 ? '' : '0'}}{{ 6 + pageMsg.currentPage }}:20</div>
             <div class="station">
               <p class="start">广州海珠客运站</p>
               <p class="end">湛江</p>
@@ -255,7 +255,7 @@
         </ul>
       </div>
       <div class="pages-wrapper">
-        <VuejsPaginate :page-count="10"
+        <VuejsPaginate :page-count="pageMsg.countPage"
                        :prevText="'上页'"
                        :nextText="'下页'"
                        :page-range="3"
@@ -267,7 +267,6 @@
                        :active-class="'active-li'"
                        :disabled-class="'disabled-li'"
                        :break-view-class="'break'"/>
-
       </div>
     </div>
   </div>
@@ -284,12 +283,17 @@ export default {
       leaveStation: true,
       arriveStation: true,
       positive: true,
-      showAssistant: false
+      showAssistant: false,
+      pageMsg: {
+        currentPage: 1, // 当前页
+        countPage: 10, // 总页数
+        liNumber: 8 // 每页显示内容数量
+      }
     }
   },
   methods: {
     showPage (page) {
-      console.log(page)
+      this.pageMsg.currentPage = page
     }
   },
   components: {
@@ -381,6 +385,7 @@ export default {
         padding 0 5px
         border-radius 3px
         cursor pointer
+        outline 0
     .msg-wrapper
       width 980px
       .change-date
@@ -436,7 +441,6 @@ export default {
             background-color #fff
             border 1px solid #01c77c!important
             border-bottom-color #fff!important
-
       .filter
         position relative
         margin-top 20px

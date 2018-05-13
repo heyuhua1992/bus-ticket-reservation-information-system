@@ -68,6 +68,9 @@
   </div>
   <div class="main clearfix">
     <div class="step"></div>
+    <div class="announcement">
+      <Announcement />
+    </div>
   </div>
 </div>
 </template>
@@ -76,6 +79,7 @@
 import SlidePic from '@/components/slidePic/SlidePic'
 import SwitchCity from '@/components/switchCity/SwitchCity'
 import Datepicker from '@/components/datepicker/Datepicker'
+import Announcement from '@/components/home/Announcement'
 export default {
   name: 'home',
   beforeRouteEnter (to, from, next) {
@@ -183,7 +187,8 @@ export default {
   components: {
     SlidePic,
     SwitchCity,
-    Datepicker
+    Datepicker,
+    Announcement
   }
 }
 </script>
@@ -305,4 +310,6 @@ export default {
       background url("./png/steps.jpg") no-repeat
       margin 0 auto
       background-color #f5f5f5
+    .announcement
+      margin-top 20px
 </style>

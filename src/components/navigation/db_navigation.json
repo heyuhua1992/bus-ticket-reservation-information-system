@@ -1,39 +1,24 @@
 {
   "NavContentLeft": [
     {
-      "title": "主站",
+      "title": "主页",
       "to": "/",
       "icon": ""
     },
     {
-      "title": "画友",
-      "to": "/h",
+      "title": "客服服务",
+      "to": "/help",
       "icon": ""
     },
     {
-      "title": "游戏中心",
-      "to": "/game",
-      "icon": ""
-    },
-    {
-      "title": "直播",
-      "to": "/live",
-      "icon": ""
-    },
-    {
-      "title": "会员购",
-      "to": "/show",
-      "icon": ""
-    },
-    {
-      "title": "下载APP",
-      "to": "/app",
+      "title": "常见问题",
+      "to": "/details",
       "icon": ""
     }
   ],
   "NavContentRight": [
     {
-      "title": "大会员",
+      "title": "会员",
       "to": "/",
       "icon": ""
     },
