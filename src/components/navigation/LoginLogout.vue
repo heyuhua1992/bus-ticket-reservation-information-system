@@ -13,7 +13,7 @@
                v-if="db_navigation.Img"
                src="./png/吃药.gif"/>
           <img class="pendant"/>
-          <i class="legalize vip"></i>
+          <!--<i class="legalize vip"></i>-->
         </div>
       </router-link>
       <transition name="fade">
@@ -23,23 +23,23 @@
               <b>火昱</b>
               <p class="vip-type">
                 <router-link to="/">
-                  <span>大会员</span>
+                  <span>会员</span>
                 </router-link>
               </p>
             </div>
             <div class="btns-profile clearfix">
-              <div class="coin fl">
-                <router-link to="/" title="硬币">
-                  <i></i>
-                  <span>90</span>
-                </router-link>
-              </div>
-              <div class="currency fl">
-                <router-link to="/" title="B币">
-                  <i></i>
-                  <span>0</span>
-                </router-link>
-              </div>
+              <!--<div class="coin fl">-->
+                <!--<router-link to="/" title="硬币">-->
+                  <!--<i></i>-->
+                  <!--<span>90</span>-->
+                <!--</router-link>-->
+              <!--</div>-->
+              <!--<div class="currency fl">-->
+                <!--<router-link to="/" title="B币">-->
+                  <!--<i></i>-->
+                  <!--<span>0</span>-->
+                <!--</router-link>-->
+              <!--</div>-->
               <div class="phone fr" :class="{verified:true}">
                 <router-link to="/">
                   <i></i>
@@ -67,9 +67,9 @@
             </ul>
           </div>
           <div class="menber-bottom">
-            <router-link class="logout" to="/">
+            <a href="javascript:;" class="logout" @click="$store.dispatch('Logout')">
               退出
-            </router-link>
+            </a>
           </div>
         </div>
       </transition>
@@ -300,6 +300,52 @@ export default {
             &.verified
               i
                 background-position -343px -534px
+      .member-menu
+        border-top 1px solid #e5e9ef
+        padding 10px 20px 40px
+        ul
+          width 240px
+          clear both
+          zoom 1
+          .account
+            float left
+            width 100px
+            margin-right 20px
+            position relative
+            a
+              &:hover
+                color #00a1d6
+                i
+                  &.personal
+                    background-position -536px -407px
+                  &.order
+                    background-position -344px -856px
+                  &.ticket
+                    background-position -344px -920px
+              &:focus
+                outline none
+              white-space nowrap
+              color #222
+              text-align left
+              margin 0 auto
+              display block
+              padding 5px 0
+              line-height 16px
+              i
+                width 16px
+                height 16px
+                margin-right 10px
+                vertical-align top
+                background-image url("./png/icons.png")
+                &.personal
+                  display inline-block
+                  background-position -472px -407px
+                &.order
+                  display inline-block
+                  background-position -280px -856px
+                &.ticket
+                  display inline-block
+                  background-position -280px -920px
       .menber-bottom
         position absolute
         bottom 0

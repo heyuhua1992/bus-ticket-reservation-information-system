@@ -10,6 +10,7 @@
                  type="text"
                  placeholder="你的手机号"
                  maxlength="20"
+                 v-model="userMsg.phone"
                  v-validate="{required: true, regex: /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/ }"
                  name="phone"
                  autocomplete="off"/>
@@ -22,6 +23,7 @@
         <li class="password status-box">
           <input class="input"
                  type="password"
+                 v-model="userMsg.password"
                  v-validate="{required: true,max: 16,min: 6, alpha_dash: true}"
                  name="password"
                  placeholder="密码"/>
@@ -67,12 +69,30 @@ import TitleLine from '@/components/titleLine/TitleLine'
 import GeetestNode from '@/components/geetestNode/GeetestNode'
 export default {
   name: 'login',
+  data () {
+    return {
+      userMsg: {
+        phone: '',
+        password: ''
+      }
+    }
+  },
   methods: {
     // 获取人机验证
     checkValidate () {
-      if (this.isOk) {
-        let data = this.$refs.getResult.result
-        this.$store.dispatch('checkValidate', data)
+      let data = this.$refs.getResult.result
+      // 重置
+      this.$store.state.checkFromServer = false
+      // todo：忘记下面这个什么用
+      this.$store.dispatch('checkValidate', data)
+      if (this.isOk && data && this.$store.state.checkFromServer) {
+        let tipsData = {
+          tips: '登陆成功，3秒后返回首页,无反应可直接点击跳转',
+          back: '/',
+          wait: 3000
+        }
+        this.$store.dispatch('Login', this.userMsg)
+        this.$router.push({path: '/informationtips', query: tipsData})
       }
     }
   },
@@ -103,6 +123,7 @@ export default {
     width 980px
     height 325px
     margin 0 auto
+    font-size 12px
   .input-box
     text-align center
     margin 0 auto

@@ -40,7 +40,7 @@
       <li class="label">
         <span class="span-left">出发日期</span>
         <div class="input-box">
-          <Datepicker @showDay="showDay" @setStartDateTime="setStartDateTime"/>
+          <Datepicker @showDay="showDay"/>
           <!--<input class="txt-input" type="text" readonly="readonly">-->
           <span class="txt-day">{{nowSlectedDay}}</span>
         </div>
@@ -117,9 +117,8 @@ export default {
         ],
         num: 2 // 有多少滑动图片 (直接取pageArr的长度好像有点问题？)
       },
-      leaveCity: '',
-      arriveCity: '',
-      startDateTime: this.setStartDateTime(new Date()),
+      leaveCity: this.$store.state.searchMsg.leaveCity,
+      arriveCity: this.$store.state.searchMsg.arriveCity,
       leaveCityBox: false, // 是否显示出发城市的选择框
       arriveCityBox: false, // 是否显示到达城市的选择框
       boxHover: false, // 鼠标有没有在选择框里面
@@ -152,6 +151,7 @@ export default {
       this.focusInput = false
     },
     toggle () {
+      // 解构
       [this.arriveCity, this.leaveCity] = [this.leaveCity, this.arriveCity]
     },
     setInputText (type, val) {
@@ -167,22 +167,14 @@ export default {
     showDay (state) { // 显示 《今天》 这个词
       this.nowSlectedDay = state
     },
-    setStartDateTime (date) {
-      this.startDateTime = date.toLocaleDateString().replace(/\//g, '-')
-      return this.startDateTime
-    },
     sendMsg () {
-      if (this.leaveCity && this.arriveCity && this.startDateTime) {
-        let params = {
-          startname: this.leaveCity,
-          arrivename: this.arriveCity,
-          startdatetime: this.startDateTime
-        }
-        this.$router.push({path: '/buslist', query: params})
+      if (this.leaveCity && this.arriveCity) {
+        let searchMsg = this.$store.state.searchMsg
+        searchMsg.leaveCity = this.leaveCity
+        searchMsg.arriveCity = this.arriveCity
+        this.$router.push('/buslist')
       }
     }
-  },
-  computed: {
   },
   components: {
     SlidePic,

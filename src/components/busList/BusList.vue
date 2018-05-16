@@ -333,7 +333,7 @@ export default {
           outline 0
         input
           display inline-block
-          max-width 160px
+          max-width 155px
           height 30px
           line-height 30px
           padding 0 15px

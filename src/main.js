@@ -8,6 +8,7 @@ import Vuex from './vuex/vuex'
 import './vee-validate/VeeValidate'
 import '@/common/stylus/index'
 import '../static/css/bootstrap-theme.min.css'
+import '../static/css/reset.css'
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 

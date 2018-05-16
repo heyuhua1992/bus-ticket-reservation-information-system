@@ -22,7 +22,7 @@
         <input class="inputbox"
                type="text"
                placeholder="请输入手机号码"
-               maxlength="20"
+               v-model="phone"
                v-validate="{required: true, regex: /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/ }"
                name="phone"
                ref="phone"
@@ -50,6 +50,7 @@
         <input class="inputbox"
                type="text"
                placeholder="请输入邮箱"
+               v-model="email"
                v-validate="{required: true, email: true}"
                name="email"
                ref="email"
@@ -84,7 +85,9 @@ export default {
       activeMobile: true,
       identifyCodes: '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
       identifyCode: '',
-      inputIdentifyCode: ''
+      inputIdentifyCode: '',
+      email: '',
+      phone: ''
     }
   },
   mounted () {
@@ -114,6 +117,8 @@ export default {
       let _pho = this.$validator.flags.phone
       if (identifyCode === inputIdentifyCode && _pho && _pho.valid) {
         alert('发送成功')
+        // 告诉后台执行发送操作
+        this.$router.push({path: '/resetpassword', query: {email: this.email, phone: this.phone}})
       }
       if (inputIdentifyCode.length > 0 && identifyCode !== inputIdentifyCode) {
         alert('验证码输入错误')
@@ -129,6 +134,7 @@ export default {
       let _eml = this.$validator.flags.email
       if (identifyCode === inputIdentifyCode && _eml && _eml.valid) {
         alert('发送成功')
+        this.$router.push({path: '/resetpassword', query: {email: this.email, phone: this.phone}})
       }
       if (inputIdentifyCode.length > 0 && identifyCode !== inputIdentifyCode) {
         alert('验证码输入错误')
@@ -204,7 +210,6 @@ export default {
         position relative
         width 170px
         height 18px
-        margin-top 10px
         margin-right 235px
         padding 10px 0 10px 10px
         border 1px solid #ddd

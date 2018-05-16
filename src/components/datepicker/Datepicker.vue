@@ -34,10 +34,10 @@ export default {
   },
   data () {
     return {
-      selectedDate: DATE,
+      selectedDate: this.$store.state.searchMsg.startDateTime,
       language: zh,
       format: 'yyyy-MM-dd',
-      openDate: DATE,
+      openDate: this.$store.state.searchMsg.startDateTime,
       disabledDates: {
         from: new Date(...this.dateFormat(DATE, 'from')), // 禁用这个日期之后的日期
         to: new Date(...this.dateFormat(DATE, 'to')) // 禁用这个日期之前的日期
@@ -78,7 +78,7 @@ export default {
         sendData = weekArr[week]
       }
       this.$emit('showDay', sendData)
-      this.$emit('setStartDateTime', this.selectedDate)
+      this.$store.commit('setStartDateTime', this.selectedDate)
     }
   },
   components: {

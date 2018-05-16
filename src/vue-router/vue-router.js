@@ -7,25 +7,47 @@ let routes = [
   {
     path: '/',
     // 懒加载
-    component: () => import('@/components/home/Home'),
+    component: resolve => require(['@/components/home/Home'], resolve),
     // 缓存vue的组件信息，使其不再重新加载。
     meta: {keepAlive: true}
   },
   {
     path: '/login',
-    component: () => import('@/components/login/Login')
+    component: resolve => require(['@/components/login/Login'], resolve)
   },
   {
     path: '/register',
-    component: () => import('@/components/register/Register')
+    component: resolve => require(['@/components/register/Register'], resolve)
   },
   {
     path: '/forgetpassword',
-    component: () => import('@/components/forgetPassword/ForgetPassword')
+    component: resolve => require(['@/components/forgetPassword/ForgetPassword'], resolve)
   },
   {
     path: '/buslist',
-    component: () => import('@/components/busList/BusList')
+    component: resolve => require(['@/components/busList/BusList'], resolve)
+  },
+  {
+    path: '/informationtips',
+    component: resolve => require(['@/components/informationTips/InformationTips'], resolve)
+  },
+  {
+    path: '/resetpassword',
+    component: resolve => require(['@/components/resetPassword/ResetPassword'], resolve)
+  },
+  {
+    path: '/account',
+    component: resolve => require(['@/components/account/Account'], resolve),
+    children: [
+      {
+        path: 'home',
+        component: resolve => require(['@/components/account/Home'], resolve)
+      },
+      {
+        path: 'ticket',
+        component: resolve => require(['@/components/account/Ticket'], resolve)
+      }
+    ]
   }
 ]
 export default new VueRouter({

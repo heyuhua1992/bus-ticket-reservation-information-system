@@ -9,41 +9,11 @@
       "title": "客服服务",
       "to": "/help",
       "icon": ""
-    },
-    {
-      "title": "常见问题",
-      "to": "/details",
-      "icon": ""
     }
   ],
   "NavContentRight": [
     {
-      "title": "会员",
-      "to": "/",
-      "icon": ""
-    },
-    {
       "title": "消息",
-      "to": "/",
-      "icon": ""
-    },
-    {
-      "title": "动态",
-      "to": "/",
-      "icon": ""
-    },
-    {
-      "title": "稍后再看",
-      "to": "/",
-      "icon": ""
-    },
-    {
-      "title": "收藏夹",
-      "to": "/",
-      "icon": ""
-    },
-    {
-      "title": "历史",
       "to": "/",
       "icon": ""
     }
@@ -54,28 +24,18 @@
   "MemberMenu": [
     {
       "text": "个人中心",
-      "to": "/",
-      "icon": ""
+      "to": "/account/home",
+      "icon": "personal"
     },
     {
-      "text": "投稿管理",
+      "text": "我的订单",
       "to": "/",
-      "icon": ""
+      "icon": "order"
     },
     {
-      "text": "B币中心",
+      "text": "我的车票",
       "to": "/",
-      "icon": ""
-    },
-    {
-      "text": "直播中心",
-      "to": "/",
-      "icon": ""
-    },
-    {
-      "text": "订单红线",
-      "to": "/",
-      "icon": ""
+      "icon": "ticket"
     }
   ],
   "Msg": "广告招租 老铁了解一下 ！！",
