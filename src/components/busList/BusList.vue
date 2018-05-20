@@ -6,90 +6,94 @@
         <label class="label" for="hot-dpt-city">
           出发
         </label>
-        <input type="text" id="hot-dpt-city">
+        <input type="text"
+               class="input-box"
+               id="hot-dpt-city"
+               v-model="leaveCity"
+               @focus="setLeaveCityBox(true)"
+               @blur="focusInput = false">
+        <div @mouseover="setHover(true)"
+             @mouseout="setHover(false)"
+             @click.stop
+             v-show="leaveCityBox">
+          <SwitchCity :cityType="'leave'"
+                      @setInputText="setInputText"
+                      :left="52"/>
+        </div>
       </div>
-      <div class="exchange">
+      <div class="exchange" @click="toggle">
         <span>换</span>
       </div>
       <div class="destination  input-wrapper">
         <label class="label" for="hot-des-city">
           到达
         </label>
-        <input type="text" id="hot-des-city">
+        <input type="text"
+               id="hot-des-city"
+               class="input-box"
+               v-model="arriveCity"
+               @focus="setArriveCityBox(true)"
+               @blur="focusInput = false">
+        <div @mouseover="setHover(true)"
+             @mouseout="setHover(false)"
+             @click.stop
+             v-show="arriveCityBox">
+          <SwitchCity :cityType="'arrive'"
+                      @setInputText="setInputText"
+                      :left="52"/>
+        </div>
       </div>
       <div class="date input-wrapper">
         <label class="label" for="select-date">日期</label>
-        <input type="text" id="select-date">
+        <div class="input-box" id="select-date">
+          <Datepicker :showDay="false"
+                      ref="datepick"
+                      :otherStyle="'inputbox2'"/>
+        </div>
       </div>
-      <button class="search-btn">搜索</button>
+      <button class="search-btn" @click="sendMsg">搜索</button>
     </div>
     <div class="msg-wrapper">
       <div class="change-date">
-        <div class="arrowL limite"></div>
+        <div class="arrowL"
+             :class="{limite: move === 0}"
+             @click="moveLeft"></div>
         <ul class="items">
-          <li class="item ">
-            <p>05-09</p>
-            <i>周三</i>
-          </li>
-          <li class="item ">
-            <p>05-09</p>
-            <i>周三</i>
-          </li>
-          <li class="item current">
-            <p>05-09</p>
-            <i>周三</i>
-          </li>
-          <li class="item ">
-            <p>05-09</p>
-            <i>周三</i>
-          </li>
-          <li class="item ">
-            <p>05-09</p>
-            <i>周三</i>
-          </li>
-          <li class="item ">
-            <p>05-09</p>
-            <i>周三</i>
-          </li>
-          <li class="item ">
-            <p>05-09</p>
-            <i>周三</i>
+          <li class="item "
+              v-for="(item, index) in showDateMsg(move)"
+              :key="'item' + index"
+              :class="{current: item.day === current}"
+              @click="selectAndSearch(item.day)">
+            <p>{{item.day}}</p>
+            <i>{{item.week}}</i>
           </li>
         </ul>
-        <div class="arrowR"></div>
+        <div class="arrowR"
+             @click="moveRight"
+             :class="{limite: move === ($store.state.ableRange - 7)}"></div>
       </div>
       <div class="filter">
         <dl class="leave-time">
           <dt>出发时段</dt>
           <dd class="shrink">
-            <div class="unlimited selected">
+            <div class="unlimited"
+                 :class="{selected: leaveTimeResult.unlimit}"
+                 @click="initLists('leaveTime')">
               <label>
-                <input type="checkbox">
+                <input type="checkbox"
+                       value="0"
+                       v-model="leaveTimeResult.unlimit">
                 <span>不限</span>
               </label>
             </div>
-            <div>
+            <div v-for="(item, index) in leaveTime"
+                 :key="'leave-time' + index"
+                 @click="initLists">
               <label>
-                <input type="checkbox" value="1">
-                <span>凌晨 (00:00-06:00)</span>
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" value="2">
-                <span>上午 (06:00-12:00)</span>
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" value="3">
-                <span>下午 (12:00-18:00)</span>
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" value="4">
-                <span>晚上 (18:00-24:00)</span>
+                <input type="checkbox"
+                       :value="item.value"
+                       v-model="leaveTimeResult.other">
+                <span>{{ item.text }}</span>
               </label>
             </div>
           </dd>
@@ -97,19 +101,30 @@
         <dl class="leave-station">
           <dt>出发车站</dt>
           <dd :class="{'shrink': leaveStation}">
-            <div class="unlimited selected">
+            <div class="unlimited"
+                 :class="{selected: leaveStationResult.unlimit}"
+                 @click="initLists('leaveStation')">
               <label>
-                <input type="checkbox">
+                <input type="checkbox"
+                       value="0"
+                       v-model="leaveStationResult.unlimit">
                 <span>不限</span>
               </label>
             </div>
-            <div v-for="i in 10" :key="'first' + i">
-              <label title="广州东圃汽车客运站">
-                <input type="checkbox" value="广州东圃汽车客运站">
-                <span>广州东圃汽车客运站</span>
+            <div v-for="(item, index) in stations.leaveStation"
+                 v-show="stations.leaveStation"
+                 :key="'leaveStation' + index"
+                 @click="initLists">
+              <label :title="item">
+                <input type="checkbox"
+                       :value="item"
+                       v-model="leaveStationResult.other">
+                <span>{{item}}</span>
               </label>
             </div>
-            <a class="more" @click="leaveStation = !leaveStation">
+            <a v-show="stations.leaveStation.length > 5"
+               class="more"
+               @click="leaveStation = !leaveStation">
               {{leaveStation? '更多' : '收起'}}
             </a>
           </dd>
@@ -117,19 +132,28 @@
         <dl class="arrive-station">
           <dt>到达车站</dt>
           <dd :class="{'shrink': arriveStation}">
-            <div class="unlimited selected">
+            <div class="unlimited"
+                 :class="{selected: arriveStationResult.unlimit}"
+                 @click="initLists('arriveStation')">
               <label>
-                <input type="checkbox">
+                <input type="checkbox" v-model="arriveStationResult.unlimit">
                 不限
               </label>
             </div>
-            <div v-for="i in 10" :key="'second' + i">
-              <label title="广州东圃汽车客运站">
-                <input type="checkbox" value="广州东圃汽车客运站">
-                <span>广州东圃汽车客运站</span>
+            <div v-for="(item, index) in stations.arriveStation"
+                 v-show="stations.arriveStation"
+                 :key="'arriveStation' + index"
+                 @click="initLists">
+              <label :title="item">
+                <input type="checkbox"
+                       :value="item"
+                       v-model="arriveStationResult.other">
+                <span>{{item}}</span>
               </label>
             </div>
-            <a class="more" @click="arriveStation = !arriveStation">
+            <a v-show="stations.arriveStation.length > 5"
+               class="more"
+               @click="arriveStation = !arriveStation">
               {{arriveStation? '更多' : '收起'}}
             </a>
           </dd>
@@ -217,44 +241,53 @@
           <p class="go-time">
             发车时间
             <span>
-              <i class="positive" :class="{'selected': positive}" @click="positive = true"></i>
-              <i class="reverse" :class="{'selected': !positive}" @click="positive = false"></i>
+              <i class="positive"
+                 :class="{'selected': positive}"
+                 @click="reverse(true)"></i>
+              <i class="reverse"
+                 :class="{'selected': !positive}"
+                 @click="reverse(false)"></i>
             </span>
           </p>
           <p class="leave-arrive">
             出发/到达
           </p>
-          <p class="bus-type">参考车型 / 车次</p>
+          <p class="bus-type">参考车型</p>
           <p class="price">票价</p>
         </div>
         <ul class="list">
-          <li class="row" v-for="n in pageMsg.liNumber" :key="'row' + n">
-            <div class="dp-time">{{ pageMsg.currentPage > 3 ? '' : '0'}}{{ 6 + pageMsg.currentPage }}:20</div>
+          <li class="row"
+              v-for="(item, index) in lists"
+              :key="'row' + index"
+              v-if="isShowPage(index)">
+            <div class="dp-time">{{ item.startTime }}</div>
             <div class="station">
-              <p class="start">广州海珠客运站</p>
-              <p class="end">湛江</p>
+              <p class="start">{{ item.start }}</p>
+              <p class="end">{{ item.end }}</p>
             </div>
             <div class="bus-type">
-              <div class="type">客车 / G66</div>
+              <div class="type">{{ item.busType }}</div>
               <p>
-                <span>过路车</span>
-                <span>固定班</span>
+                <span>{{ item.otherType }}</span>
               </p>
             </div>
             <div class="price">
               <span>
                 &yen;
-                <i>130</i>
+                <i>{{ item.ticket }}</i>
               </span>
             </div>
             <div class="book">
               <a class="btn">预定</a>
-              <p class="remaining">剩余33张</p>
+              <p class="remaining">剩余{{ item.remaining }}张</p>
             </div>
+          </li>
+          <li v-show="lists.length === 0">
+            没有数据
           </li>
         </ul>
       </div>
-      <div class="pages-wrapper">
+      <div class="pages-wrapper" v-show="lists.length > pageMsg.liNumber">
         <VuejsPaginate :page-count="pageMsg.countPage"
                        :prevText="'上页'"
                        :nextText="'下页'"
@@ -275,29 +308,347 @@
 
 <script>
 import VuejsPaginate from 'vuejs-paginate'
+import SwitchCity from '@/components/switchCity/SwitchCity'
+import Datepicker from '@/components/datepicker/Datepicker'
 export default {
   name: 'bus-list',
+  beforeCreate () {
+    document.addEventListener('click', () => {
+      if (!this.boxHover && !this.focusInput && (this.leaveCityBox || this.arriveCityBox)) {
+        this.leaveCityBox = false
+        this.arriveCityBox = false
+      }
+    })
+  },
+  beforeMount () {
+    if (!this.$store.state.searchMsg.leaveCity || !this.$store.state.searchMsg.arriveCity) {
+      let tipsData = {
+        tips: '您还没有输入出发站点、到达站点，3s后回到首页,无反应可直接点击跳转',
+        back: '/',
+        wait: 3000
+      }
+      this.$router.push({path: '/informationtips', query: tipsData})
+    }
+    this.buslists = (require('./busLists')).lists
+    this.initStation(this.buslists)
+    this.initMove()
+    this.initLists()
+  },
   data () {
     return {
-      showTest: this.$route.query,
+      stations: {},
+      leaveCity: this.$store.state.searchMsg.leaveCity,
+      arriveCity: this.$store.state.searchMsg.arriveCity,
+      leaveCityBox: false, // 是否显示出发城市的选择框
+      arriveCityBox: false, // 是否显示到达城市的选择框
+      boxHover: false, // 鼠标有没有在选择框里面
+      focusInput: false, // 是否已经聚焦
+      // 显示更多、收起
       leaveStation: true,
       arriveStation: true,
+      // 正序、倒序显示列表
       positive: true,
+      // 订票助手 显示 收起
       showAssistant: false,
+      // 分页
       pageMsg: {
-        currentPage: 1, // 当前页
-        countPage: 10, // 总页数
-        liNumber: 8 // 每页显示内容数量
-      }
+        currentPage: 1, // 当前页，默认为第一页
+        countPage: 10, // 总页数,根据拿到的数据进行设置（自动）
+        liNumber: 8 // 每页显示内容数量，在这里进行设置
+      },
+      // 显示的起始时间向右位移多少
+      move: 0,
+      current: this.dayFormatting(),
+      leaveTime: [
+        {
+          text: '凌晨 (00:00-06:00)',
+          value: 1,
+          timeStamp: 6 * 3600 * 1000
+        },
+        {
+          text: '上午 (06:00-12:00)',
+          value: 2,
+          timeStamp: 12 * 3600 * 1000
+        },
+        {
+          text: '下午 (12:00-18:00)',
+          value: 3,
+          timeStamp: 18 * 3600 * 1000
+        },
+        {
+          text: '晚上 (18:00-24:00)',
+          value: 4,
+          timeStamp: 24 * 3600 * 1000
+        }
+      ],
+      leaveTimeResult: {
+        unlimit: true,
+        other: []
+      },
+      leaveStationResult: {
+        unlimit: true,
+        other: []
+      },
+      arriveStationResult: {
+        unlimit: true,
+        other: []
+      },
+      buslists: [],
+      lists: []
     }
   },
   methods: {
     showPage (page) {
       this.pageMsg.currentPage = page
+    },
+    setHover (hover) {
+      this.boxHover = hover
+    },
+    setLeaveCityBox (state) {
+      this.initBox()
+      if (state) {
+        this.focusInput = true
+      }
+      this.leaveCityBox = state
+    },
+    setArriveCityBox (state) {
+      this.initBox()
+      if (state) {
+        this.focusInput = true
+      }
+      this.arriveCityBox = state
+    },
+    initBox () {
+      this.leaveCityBox = false
+      this.arriveCityBox = false
+      this.boxHover = false
+      this.focusInput = false
+    },
+    toggle () {
+      // 解构
+      [this.arriveCity, this.leaveCity] = [this.leaveCity, this.arriveCity]
+    },
+    setInputText (type, val) {
+      if (type === 'leave') {
+        this.leaveCity = val
+        this.initBox()
+      }
+      if (type === 'arrive') {
+        this.arriveCity = val
+        this.initBox()
+      }
+    },
+    sendMsg () {
+      if (this.leaveCity && this.arriveCity) {
+        let searchMsg = this.$store.state.searchMsg
+        searchMsg.leaveCity = this.leaveCity
+        searchMsg.arriveCity = this.arriveCity
+        console.log('后台接收中...')
+      }
+    },
+    showDateMsg (addDay) {
+      if (addDay < 0) {
+        addDay = 0
+      }
+      if (addDay > this.$store.state.ableRange - 7) {
+        addDay = this.$store.state.ableRange - 7
+      }
+      let weekArr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+      let showData = []
+      for (let i = 0; i < 7; i++) {
+        let add = 24 * 3600 * 1000 * (addDay + i)
+        let today = new Date(this.$store.state.today.getTime() + add)
+        let str = this.dayFormatting(today)
+        let week = today.getDay()
+        showData.push({
+          week: weekArr[week % 7],
+          day: str
+        })
+      }
+      return showData
+    },
+    moveRight () {
+      if (Math.ceil(this.move) < this.$store.state.ableRange - 7) {
+        this.move++
+      }
+    },
+    moveLeft () {
+      if (Math.floor(this.move) > 0) {
+        this.move--
+      }
+    },
+    // 把输入的日期提取并格式化为 01-09 这种日期格式
+    dayFormatting (date) {
+      if (!date) {
+        date = this.$store.state.searchMsg.startDateTime
+      }
+      let selectDay = new Date(date)
+      let str = selectDay.toLocaleDateString().slice(5).split('/')
+      for (let i in str) {
+        if (str[i].length < 2) {
+          str[i] = '0' + str[i]
+        }
+      }
+      str = str.join('-')
+      return str
+    },
+    // 选择日期 并执行搜索
+    selectAndSearch (str) {
+      if (this.leaveCity && this.arriveCity) {
+        let selectDay = this.dateTransform(str)
+        this.current = this.dayFormatting(selectDay)
+        this.$refs.datepick.selectDate(selectDay)
+        let searchMsg = this.$store.state.searchMsg
+        searchMsg.leaveCity = this.leaveCity
+        searchMsg.arriveCity = this.arriveCity
+        this.$store.commit('setStartDateTime', selectDay)
+        console.log('后台接收中...')
+      }
+    },
+    // 把 01-03 这种字符串转换为 date类型数据
+    dateTransform (str) {
+      let today = this.$store.state.today
+      let year = today.getFullYear() + ''
+      str = str.split('-')
+      let dateStr = [year, ...str]
+      dateStr = dateStr.join('/')
+      let date = new Date(dateStr)
+      if (date.getTime() >= today.getTime()) { // 没有跨年
+        return date
+      } else if ((date.getTime() + 24 * 3600 * 1000) >= today.getTime()) { // 今天
+        return date
+      } else { // 跨年
+        year = year - 0 + 1
+        dateStr = [year, ...str]
+        dateStr = dateStr.join('/')
+        date = new Date(dateStr)
+        return date
+      }
+    },
+    initMove () {
+      let startDateTime = this.$store.state.searchMsg.startDateTime
+      let today = this.$store.state.today
+      let move = (startDateTime.getTime() - today.getTime()) / (24 * 3600 * 1000)
+      this.move = Math.ceil(move)
+    },
+    initLists (str) {
+      this.pageMsg.currentPage = 1
+      if (str === 'leaveTime') {
+        this.leaveTimeResult.unlimit = true
+        this.leaveTimeResult.other = []
+      }
+      if (str === 'leaveStation') {
+        this.leaveStationResult.unlimit = true
+        this.leaveStationResult.other = []
+      }
+      if (str === 'arriveStation') {
+        this.arriveStationResult.unlimit = true
+        this.arriveStationResult.other = []
+      }
+      this.$nextTick(() => {
+        this.lists = this.buslists.filter((item) => {
+          // 根据出发时间筛选
+          let filter1 = this.leaveTimeFilter(item)
+          // 根据出发站点筛选
+          filter1 = this.stationFilter(filter1, this.leaveStationResult, 'leave')
+          filter1 = this.stationFilter(filter1, this.arriveStationResult, 'arrive')
+          return filter1
+        })
+        this.initPage()
+      })
+    },
+    // 把06:20 或者6:3 这种格式的时间转换为时间戳
+    timeTransform (str) {
+      let arr = str.split(':')
+      arr = arr.map((item) => {
+        return item - 0
+      })
+      let timeStamp = (arr[0] * 3600 + arr[1] * 60) * 1000
+      return timeStamp
+    },
+    // 根据时间段进行过滤
+    leaveTimeFilter (item) {
+      let lt = this.leaveTimeResult
+      let st = this.timeTransform(item.startTime)
+      if (lt.other.length > 0) {
+        lt.unlimit = false
+      } else if (lt.other.length < 1) {
+        lt.unlimit = true
+      }
+      if (lt.unlimit) {
+        return item
+      } else {
+        let oth = lt.other
+        for (let i = 0; i < oth.length; i++) {
+          oth[i] = oth[i] - 0
+          let right = this.leaveTime[oth[i] - 1].timeStamp
+          let left = oth[i] === 1 ? 0 : this.leaveTime[oth[i] - 2].timeStamp
+          if (st <= right && st > left) {
+            return item
+          }
+        }
+      }
+    },
+    // 根据站点进行过滤
+    stationFilter (data, result, type) {
+      if (result.other.length > 0) {
+        result.unlimit = false
+      } else if (result.other.length < 1) {
+        result.unlimit = true
+      }
+      if (data && !result.unlimit) {
+        let d = type === 'leave' ? data.start : data.end
+        if (result.other.indexOf(d) === -1) {
+          return
+        }
+        return data
+      }
+      return data
+    },
+    initPage () {
+      let num = Math.ceil(this.lists.length / this.pageMsg.liNumber)
+      this.pageMsg.countPage = num
+    },
+    isShowPage (index) {
+      index += 1
+      let cur = this.pageMsg.currentPage
+      let num = this.pageMsg.liNumber
+      if (cur === 1 && index <= num) {
+        return true
+      } else if (cur === 1) {
+        return false
+      }
+
+      if (index <= cur * num && index > (cur - 1) * num) {
+        return true
+      } else {
+        return false
+      }
+    },
+    // 初始化出发站点列表\到达站点列表
+    initStation (buslists) {
+      let s = new Set()
+      let e = new Set()
+      buslists.map((item) => {
+        s.add(item.start)
+        e.add(item.end)
+      })
+      this.stations.leaveStation = [...s]
+      this.stations.arriveStation = [...e]
+    },
+    // 倒序
+    reverse (type) {
+      if (this.positive !== type) {
+        this.buslists.reverse()
+        this.positive = type
+        this.initLists()
+      }
     }
   },
   components: {
-    VuejsPaginate
+    VuejsPaginate,
+    SwitchCity,
+    Datepicker
   }
 }
 </script>
@@ -307,7 +658,7 @@ export default {
     width 980px
     margin 0 auto
     padding-top 15px
-    overflow hidden
+    user-select none
     .search
       display flex
       padding 15px 20px
@@ -322,6 +673,7 @@ export default {
         padding 4px 0
         background-color #fff
         outline 0
+        position relative
         .label
           display inline-block
           border-right 1px solid #ccc
@@ -331,7 +683,7 @@ export default {
           line-height 30px
           cursor default
           outline 0
-        input
+        .input-box
           display inline-block
           max-width 155px
           height 30px
@@ -424,7 +776,7 @@ export default {
           flex 1
           .item
             flex 1
-            height 46px
+            height 47px
             line-height 21px
             border-right 1px solid #dcdcdc
             text-align center

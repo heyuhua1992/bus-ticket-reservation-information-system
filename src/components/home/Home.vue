@@ -17,7 +17,8 @@
              @mouseout="setHover(false)"
              @click.stop
              v-show="leaveCityBox">
-          <SwitchCity :cityType="'leave'" @setInputText="setInputText"/>
+          <SwitchCity :cityType="'leave'"
+                      @setInputText="setInputText"/>
         </div>
       </li>
       <li class="label">
@@ -41,14 +42,13 @@
         <span class="span-left">出发日期</span>
         <div class="input-box">
           <Datepicker @showDay="showDay"/>
-          <!--<input class="txt-input" type="text" readonly="readonly">-->
           <span class="txt-day">{{nowSlectedDay}}</span>
         </div>
       </li>
       <li class="label">
         <span class="span-left"></span>
         <div class="input-box">
-          <a class="search-btn" ref="toBusList" @click="sendMsg">
+          <a class="search-btn" @click="sendMsg">
             汽车票查询
           </a>
         </div>

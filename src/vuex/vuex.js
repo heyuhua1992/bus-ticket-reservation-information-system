@@ -14,9 +14,13 @@ const state = {
     leaveCity: '',
     // 到达城市
     arriveCity: '',
-    // 出发时间
+    // 出发时间,会被修改
     startDateTime: new Date()
-  }
+  },
+  // 今天的时间
+  today: new Date(),
+  // 允许选取的日期范围，今天开始的，后60天内
+  ableRange: 60
 }
 // 类似于计算属性的东西
 const getters = {}

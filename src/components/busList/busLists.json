@@ -1,0 +1,94 @@
+{
+  "lists": [
+    {
+      "startTime": "06:20",
+      "start": "广州海珠客运站1",
+      "end": "湛江1",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "110",
+      "remaining": 33
+    },
+    {
+      "startTime": "07:20",
+      "start": "广州海珠客运站2",
+      "end": "湛江2",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "13",
+      "remaining": 33
+    },
+    {
+      "startTime": "10:20",
+      "start": "广州海珠客运站2",
+      "end": "湛江3",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "1300",
+      "remaining": 33
+    },
+    {
+      "startTime": "13:20",
+      "start": "广州海珠客运站3",
+      "end": "湛江4",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "1130",
+      "remaining": 33
+    },
+    {
+      "startTime": "15:20",
+      "start": "广州海珠客运站3",
+      "end": "湛江1",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "1030",
+      "remaining": 33
+    },
+    {
+      "startTime": "17:20",
+      "start": "广州海珠客运站3",
+      "end": "湛江2",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "130",
+      "remaining": 33
+    },
+    {
+      "startTime": "19:20",
+      "start": "广州海珠客运站4",
+      "end": "湛江3",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "130",
+      "remaining": 33
+    },
+    {
+      "startTime": "20:20",
+      "start": "广州海珠客运站4",
+      "end": "湛江4",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "130",
+      "remaining": 33
+    },
+    {
+      "startTime": "21:20",
+      "start": "广州海珠客运站4",
+      "end": "湛江1",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "130",
+      "remaining": 1
+    },
+    {
+      "startTime": "23:20",
+      "start": "广州海珠客运站10",
+      "end": "湛江1",
+      "busType": "客车",
+      "otherType": "过路车",
+      "ticket": "130",
+      "remaining": 33
+    }
+  ]
+}

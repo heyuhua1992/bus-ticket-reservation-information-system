@@ -1,5 +1,5 @@
 <template>
-<div id="switch-city">
+<div id="switch-city" :style="{top: top + 'px', left: left + 'px'}">
   <span class="switch-arrows"></span>
   <div class="switch-tab">
     <h4 class="switch-tab-head">
@@ -64,6 +64,14 @@ export default {
     cityType: {
       type: String,
       default: 'leave'
+    },
+    left: {
+      type: Number,
+      default: 90
+    },
+    top: {
+      type: Number,
+      default: 35
     }
   },
   data () {
@@ -108,8 +116,6 @@ export default {
 #switch-city
   position absolute
   z-index 2000
-  left 90px
-  top 35px
   margin-top 10px
   background-color #fff
   box-shadow 0 0 16px 2px rgba(0, 0, 0, .2)
