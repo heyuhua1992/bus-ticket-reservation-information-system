@@ -40,7 +40,7 @@
         </li>
         <li class="remember">
           <label>
-            <input type="checkbox"/>记住我
+            <input type="checkbox" v-model="checkbox"/>记住我
             <span>不是自己的电脑上不要勾选此项</span>
             <router-link class="forget-password" to="/forgetpassword">忘记密码</router-link>
             <router-link class="not-checkout" to="/notcheckout">无法验证</router-link>
@@ -74,7 +74,8 @@ export default {
       userMsg: {
         phone: '',
         password: ''
-      }
+      },
+      checkbox: true
     }
   },
   methods: {
@@ -91,7 +92,14 @@ export default {
           back: '/',
           wait: 3000
         }
-        this.$store.dispatch('Login', this.userMsg)
+        this.$store.dispatch('Login')
+        if (this.checkbox) {
+          this.$Cookies.set('userCode', {
+            isLogin: 'lkjhgfdsa' // 从后台拿到的代码
+          }, { expires: 7 }) // 有效期7天
+          let a = this.$Cookies.get('userCode')
+          console.log(a, JSON.parse(a).isLogin)
+        }
         this.$router.push({path: '/informationtips', query: tipsData})
       }
     }

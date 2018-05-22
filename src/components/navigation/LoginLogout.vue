@@ -11,7 +11,7 @@
         <div class="i-face">
           <img class="face"
                v-if="db_navigation.Img"
-               src="./png/吃药.gif"/>
+               src="../../../static/img/login-face.gif"/>
           <img class="pendant"/>
           <!--<i class="legalize vip"></i>-->
         </div>

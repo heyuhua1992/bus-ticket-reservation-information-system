@@ -1,23 +1,247 @@
 <template>
-<div>
-  home page
+<div id="account-home">
+  <div class="mem-box">
+    <div class="mem-pic-box clearfix">
+      <div class="mem-pic">
+        <img src="../../../static/img/login-face.gif">
+      </div>
+      <div class="mem-top-right">
+        <div class="name-box">
+          <a href="#">
+            <span>尊敬的会员</span>
+          </a>
+        </div>
+        <div class="account-verify">
+          <label>账户实名</label>
+          <span class="verify-span">去认证</span>
+        </div>
+        <div class="account-sec">
+          <label>账户安全</label>
+          <span class="line-bottom">
+            <span class="level lv1" style="width: 30%">弱</span>
+          </span>
+          <a href="#">
+            <s>提升安全度</s>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="mem-order">
+      <ul>
+        <li>
+          <a>
+            <div class="all-ico"></div>
+            <p>全部订单</p>
+          </a>
+        </li>
+        <li>
+          <a>
+            <div class="pay-ico"></div>
+            <p>
+              待支付
+              <span class="un-pay-count">0</span>
+            </p>
+          </a>
+        </li>
+        <li>
+          <a>
+            <div class="travel-ico"></div>
+            <p>
+              待出行
+              <span class="un-use-count">0</span>
+            </p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="clearfix my-order">
+    <h3>
+      我的订单
+      <a href="" class="more-order">查看全部订单</a>
+    </h3>
+    <OrderList :orderData="orderData"/>
+  </div>
 </div>
 </template>
 
 <script>
+import OrderList from '@/components/orderList/OrderList'
 export default {
   name: 'home',
   props: {
     setTitleText: {
       type: Function
+    },
+    orderData: {
+      type: Object
     }
   },
   beforeMount () {
     this.setTitleText('首页')
+  },
+  components: {
+    OrderList
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="stylus" scoped>
+#account-home
+  float left
+  color #333
+  font-size 14px
+  min-height 640px
+  width 100%
+  padding 0 10px 20px
+  box-sizing border-box
+  .mem-box
+    padding 5px 0 5px 5px
+    background-color #f7f7f7
+    margin-bottom 20px
+    height 142px
+    overflow hidden
+    .mem-pic-box
+      float left
+      width 330px
+      border-right 1px solid #ddd
+      padding 25px 0 25px 25px
+      .mem-pic
+        float left
+        width 80px
+        height 80px
+        img
+          display inline-block
+          width 80px
+          height 80px
+          border 0
+          border-radius 50%
+      .mem-top-right
+        position relative
+        float left
+        width 220px
+        margin 3px 0 0 15px
+        font-size 12px
+        .name-box
+          height 20px
+          a:first-child
+            display inline-block
+            float left
+            max-width 120px
+            color #666
+            font-size 18px
+            font-weight 700
+            overflow hidden
+            white-space nowrap
+            text-overflow ellipsis
+            cursor pointer
+            outline 0
+        .account-verify
+          height 20px
+          clear both
+          margin-top 15px
+          label
+            float left
+            color #666
+          span
+            margin-left 7px
+            color #0185c6
+            cursor pointer
+        .account-sec
+          margin 10px 0 5px 0
+          &>label
+            float left
+            color #666
+          .line-bottom
+            display block
+            float left
+            width 75px
+            height 12px
+            margin 4px 0 0 7px
+            background-color #ddd
+            overflow hidden
+            .level
+              display block
+              height 12px
+              line-height 13px
+              padding-left 5px
+              overflow hidden
+              color #fff
+              background-color #ff7800
+              &.lv1
+                background-color #2ebd59
+          &>a
+            float left
+            color #333
+            margin-left 8px
+            cursor pointer
+            s
+              display block
+              color #08c
+              text-decoration none
+    .mem-order
+      float left
+      width 380px
+      padding 25px 0 25px 20px
+      ul>li
+        float left
+        width 96px
+        a
+          cursor pointer
+        a>p
+          text-align center
+          color #666
+          span
+            color #ff7800
+            margin-left 3px
+            font-weight 700
+        a .all-ico, a .pay-ico, a .travel-ico
+          width 52px
+          height 52px
+          margin 0 0 15px 15px
+          filter invert(50%)
+          background url("./png/orderCenter.0.2.png") no-repeat
+        a .all-ico
+          margin-left 13px
+          background-position -60px -216px
+          &:hover
+            background-position -58px -345px
+        a .pay-ico
+          background-position -145px -216px
+          &:hover
+            background-position -143px -345px
+        a .travel-ico
+          background-position -60px -279px
+          &:hover
+            background-position -58px -412px
+        &:first-child
+          width 96px
+          a>p
+            width 82px
+  .my-order
+    min-height 210px
+    margin-bottom 20px
+    &>h3
+      position relative
+      height 24px
+      line-height 24px
+      margin-top 18px
+      padding-bottom 6px
+      padding-left 28px
+      font-size 20px
+      font-weight 400
+      color #333
+      border-bottom 2px solid #eee
+      background url("./png/orderCenter.0.2.png") no-repeat
+      background-position -278px -158px
+      .more-order
+        filter invert(0%)
+        font-size 14px
+        position absolute
+        right 20px
+        cursor pointer
+        color #0185c6
+        outline 0
+        &:hover
+          color #ff5d3d
 </style>

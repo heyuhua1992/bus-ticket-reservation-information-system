@@ -278,7 +278,7 @@
               </span>
             </div>
             <div class="book">
-              <a class="btn">预定</a>
+              <a class="btn" @click="booking(item)">预订</a>
               <p class="remaining">剩余{{ item.remaining }}张</p>
             </div>
           </li>
@@ -321,7 +321,12 @@ export default {
     })
   },
   beforeMount () {
-    if (!this.$store.state.searchMsg.leaveCity || !this.$store.state.searchMsg.arriveCity) {
+    this.$nextTick(() => {
+      let arr = this.$route.query.time.split('-')
+      arr[1]--
+      this.$refs.datepick.selectDate(new Date(...arr))
+    })
+    if (!this.$route.query.leave || !this.$route.query.arrive) {
       let tipsData = {
         tips: '您还没有输入出发站点、到达站点，3s后回到首页,无反应可直接点击跳转',
         back: '/',
@@ -337,8 +342,8 @@ export default {
   data () {
     return {
       stations: {},
-      leaveCity: this.$store.state.searchMsg.leaveCity,
-      arriveCity: this.$store.state.searchMsg.arriveCity,
+      leaveCity: this.$route.query.leave,
+      arriveCity: this.$route.query.arrive,
       leaveCityBox: false, // 是否显示出发城市的选择框
       arriveCityBox: false, // 是否显示到达城市的选择框
       boxHover: false, // 鼠标有没有在选择框里面
@@ -394,7 +399,8 @@ export default {
         other: []
       },
       buslists: [],
-      lists: []
+      lists: [],
+      weekArr: ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     }
   },
   methods: {
@@ -443,6 +449,12 @@ export default {
         let searchMsg = this.$store.state.searchMsg
         searchMsg.leaveCity = this.leaveCity
         searchMsg.arriveCity = this.arriveCity
+        let msg = {
+          leave: this.leaveCity,
+          arrive: this.arriveCity,
+          time: searchMsg.startDateTime.toLocaleDateString().replace(/\//g, '-')
+        }
+        this.$router.push({path: '/buslist', query: msg})
         console.log('后台接收中...')
       }
     },
@@ -453,7 +465,6 @@ export default {
       if (addDay > this.$store.state.ableRange - 7) {
         addDay = this.$store.state.ableRange - 7
       }
-      let weekArr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
       let showData = []
       for (let i = 0; i < 7; i++) {
         let add = 24 * 3600 * 1000 * (addDay + i)
@@ -461,7 +472,7 @@ export default {
         let str = this.dayFormatting(today)
         let week = today.getDay()
         showData.push({
-          week: weekArr[week % 7],
+          week: this.weekArr[week % 7],
           day: str
         })
       }
@@ -480,7 +491,9 @@ export default {
     // 把输入的日期提取并格式化为 01-09 这种日期格式
     dayFormatting (date) {
       if (!date) {
-        date = this.$store.state.searchMsg.startDateTime
+        let arr = this.$route.query.time.split('-')
+        arr[1]--
+        date = new Date(...arr)
       }
       let selectDay = new Date(date)
       let str = selectDay.toLocaleDateString().slice(5).split('/')
@@ -498,11 +511,8 @@ export default {
         let selectDay = this.dateTransform(str)
         this.current = this.dayFormatting(selectDay)
         this.$refs.datepick.selectDate(selectDay)
-        let searchMsg = this.$store.state.searchMsg
-        searchMsg.leaveCity = this.leaveCity
-        searchMsg.arriveCity = this.arriveCity
         this.$store.commit('setStartDateTime', selectDay)
-        console.log('后台接收中...')
+        this.sendMsg()
       }
     },
     // 把 01-03 这种字符串转换为 date类型数据
@@ -526,7 +536,9 @@ export default {
       }
     },
     initMove () {
-      let startDateTime = this.$store.state.searchMsg.startDateTime
+      let arr = this.$route.query.time.split('-')
+      arr[1]--
+      let startDateTime = new Date(...arr)
       let today = this.$store.state.today
       let move = (startDateTime.getTime() - today.getTime()) / (24 * 3600 * 1000)
       this.move = Math.ceil(move)
@@ -643,6 +655,20 @@ export default {
         this.positive = type
         this.initLists()
       }
+    },
+    // 预订
+    booking (item) {
+      let ct = this.dateTransform(this.current)
+      let busData = {
+        startTime: item.startTime,
+        start: item.start,
+        end: item.end,
+        busType: item.busType,
+        ticket: item.ticket,
+        weekDay: this.weekArr[ct.getDay() % 7],
+        date: ct.toLocaleDateString().replace(/\//g, '-')
+      }
+      this.$router.push({path: '/booking', query: busData})
     }
   },
   components: {

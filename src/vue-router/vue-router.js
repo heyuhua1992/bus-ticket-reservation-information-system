@@ -36,6 +36,10 @@ let routes = [
     component: resolve => require(['@/components/resetPassword/ResetPassword'], resolve)
   },
   {
+    path: '/booking',
+    component: resolve => require(['@/components/booking/Booking'], resolve)
+  },
+  {
     path: '/account',
     component: resolve => require(['@/components/account/Account'], resolve),
     children: [
@@ -44,8 +48,8 @@ let routes = [
         component: resolve => require(['@/components/account/Home'], resolve)
       },
       {
-        path: 'ticket',
-        component: resolve => require(['@/components/account/Ticket'], resolve)
+        path: 'order',
+        component: resolve => require(['@/components/account/Order'], resolve)
       }
     ]
   }

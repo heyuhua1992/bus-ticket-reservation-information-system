@@ -172,7 +172,12 @@ export default {
         let searchMsg = this.$store.state.searchMsg
         searchMsg.leaveCity = this.leaveCity
         searchMsg.arriveCity = this.arriveCity
-        this.$router.push('/buslist')
+        let msg = {
+          leave: this.leaveCity,
+          arrive: this.arriveCity,
+          time: this.$store.state.searchMsg.startDateTime.toLocaleDateString().replace(/\//g, '-')
+        }
+        this.$router.push({path: '/buslist', query: msg})
       }
     }
   },

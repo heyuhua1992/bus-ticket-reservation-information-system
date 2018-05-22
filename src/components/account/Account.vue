@@ -18,18 +18,18 @@
         </router-link>
         <router-link tag="li"
                      class="security-list"
-                     to="/account/ticket">
+                     to="/account/order">
           <i class="security-icon icon-2"></i>
           <span class="security-nav-name">
-            我的车票
+            我的订单
           </span>
         </router-link>
         <router-link tag="li"
                      class="security-list"
-                     to="account/order">
+                     to="account/ticket">
           <i class="security-icon icon-3"></i>
           <span class="security-nav-name">
-            我的订单
+            我的车票
           </span>
         </router-link>
         <router-link tag="li"
@@ -49,7 +49,7 @@
           {{titleText}}
         </span>
       </div>
-      <router-view :setTitleText="setTitleText"/>
+      <router-view :orderData="orderData" :setTitleText="setTitleText"/>
     </div>
   </div>
 </div>
@@ -61,7 +61,8 @@ export default {
   name: 'account',
   data () {
     return {
-      titleText: 'error'
+      titleText: 'error',
+      orderData: require('./orderData')
     }
   },
   methods: {

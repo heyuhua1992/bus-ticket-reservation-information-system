@@ -6,14 +6,14 @@
 
 <script>
 export default {
-  name: 'ticket',
+  name: 'order',
   props: {
     setTitleText: {
       type: Function
     }
   },
   beforeMount () {
-    this.setTitleText('我的车票')
+    this.setTitleText('我的订单')
   }
 }
 </script>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "js-cookie": "^2.2.0",
     "npm": "^6.0.0",
     "superagent": "^3.8.2",
     "vee-validate": "^2.0.6",

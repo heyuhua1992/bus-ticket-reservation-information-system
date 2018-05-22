@@ -34,3 +34,4 @@ vue-router
 vuex
 stylus
 stylus-loader
+js-cookie

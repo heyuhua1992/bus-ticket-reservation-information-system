@@ -29,8 +29,8 @@ const getters = {}
 // 使用dispatch进行触发
 // 处理异步操作，不能直接操作mutations
 const actions = {
-  Login ({commit}, userMsg) {
-    commit('Login', userMsg)
+  Login ({commit}) {
+    commit('Login')
   },
   Logout ({commit}) {
     commit('Logout')
@@ -43,11 +43,7 @@ const actions = {
 // 方法需要使用commit进行触发
 // 非异步操作写在mutations中，可以对state中的数据进行操控
 const mutations = {
-  Login (state, userMsg) {
-    // userMsg: {
-    //   phone: '',
-    //     password: ''
-    // }
+  Login (state) {
     state.isLogin = true
   },
   Logout (state) {
