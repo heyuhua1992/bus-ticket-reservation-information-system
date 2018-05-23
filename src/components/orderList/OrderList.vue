@@ -10,37 +10,87 @@
     </ul>
   </div>
   <div class="order-list">
-    <ul>
-      <li class="order-li" v-for="n in 5" :key="n">
+    <ul v-if="orderData && orderData.orders.length > 0">
+      <li class="order-li"
+          v-for="(item, index) in showData"
+          :key="'order-li' + index">
           <span class="list-title">
-            <span title="广州-湛江">广州-湛江</span>
+            <span :title="item.ticket.start + '-' + item.ticket.end">
+              {{item.ticket.start}} - {{item.ticket.end}}
+            </span>
             <span class="order-detail">
-              2018-05-19 09:45 出发
+              {{item.ticket.startDay}} {{item.ticket.startTime}} 出发
             </span>
           </span>
         <span class="list-money">
-            <span class="money-data">&yen;120</span>
+            <span class="money-data">&yen;{{item.totalPrice}}</span>
           </span>
         <span class="list-date">
             <span class="order-code">
-              WQ5AFU887710081A
+              {{item.orderCode}}
             </span>
           </span>
         <span class="list-state">
-            已取消
+            {{item.orderState}}
           </span>
         <span class="list-operate">
-            <a href="" class="check-order">查看订单</a>
+            <a class="check-order" @click="setMark(true, item)">查看订单</a>
           </span>
       </li>
     </ul>
+    <div v-else class="no-order">
+      暂时没有相关订单
+    </div>
+  </div>
+  <div class="mask" v-if="isMark">
+    <ViewOrder @setMark="setMark" :orderItem="orderItem"/>
   </div>
 </div>
 </template>
 
 <script>
+import ViewOrder from '@/components/viewOrder/ViewOrder'
 export default {
-  name: 'order-list'
+  name: 'order-list',
+  props: {
+    orderData: {
+      type: Object
+    },
+    showLis: {
+      type: Number,
+      default: -1
+    }
+  },
+  data () {
+    return {
+      isMark: false,
+      orderItem: {}
+    }
+  },
+  methods: {
+    setMark (state, item) {
+      this.isMark = state
+      if (item) {
+        this.orderItem = item
+      }
+    }
+  },
+  computed: {
+    showData () {
+      let data = this.orderData.orders
+      if (this.showLis === -1) {
+        return data
+      } else if (typeof this.showLis === 'number') {
+        let newData = []
+        newData = data.slice(0, this.showLis)
+        return newData
+      }
+      console.log('出错了')
+    }
+  },
+  components: {
+    ViewOrder
+  }
 }
 </script>
 
@@ -51,10 +101,11 @@ export default {
   .order-info
     height 38px
     ul
+      display flex
+      background-color #ccc
       &>li
-        float left
-        font-size 12px
-        color #999
+        font-size 14px
+        color #000
         line-height 22px
         padding 8px 0
         text-align left
@@ -79,6 +130,8 @@ export default {
       width 100%
       padding 20px 0
       border 1px solid #eee
+      &:nth-of-type(odd)
+        background-color #eee
       &>span
         float left
       .list-title
@@ -142,4 +195,17 @@ export default {
           cursor pointer
           &:hover
             color #ff5d3d
+    .no-order
+      height 200px
+      line-height 200px
+      margin 0 auto
+      text-align center
+  .mask
+    position absolute
+    top 0
+    left 0
+    width 100%
+    min-height 100%
+    background-color #fff
+    z-index 100
 </style>

@@ -12,9 +12,7 @@
                      @click="selected"
                      to="/account/home">
           <i class="security-icon icon-1"></i>
-          <span class="security-nav-name text-2">
-            首页
-          </span>
+          <span class="security-nav-name text-2">首页</span>
         </router-link>
         <router-link tag="li"
                      class="security-list"
@@ -26,10 +24,10 @@
         </router-link>
         <router-link tag="li"
                      class="security-list"
-                     to="account/ticket">
+                     to="/account/setting">
           <i class="security-icon icon-3"></i>
           <span class="security-nav-name">
-            我的车票
+            我的信息
           </span>
         </router-link>
         <router-link tag="li"
@@ -151,6 +149,7 @@ export default {
             &.text-3
               letter-spacing 7px
     .security-right
+      position relative
       float left
       width 829px
       border-left 1px solid #ddd

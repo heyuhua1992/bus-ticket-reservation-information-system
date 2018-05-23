@@ -60,7 +60,7 @@
       我的订单
       <a href="" class="more-order">查看全部订单</a>
     </h3>
-    <OrderList :orderData="orderData"/>
+    <OrderList :orderData="orderData" :showLis="3"/>
   </div>
 </div>
 </template>

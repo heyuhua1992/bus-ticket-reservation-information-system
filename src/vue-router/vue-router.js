@@ -50,6 +50,14 @@ let routes = [
       {
         path: 'order',
         component: resolve => require(['@/components/account/Order'], resolve)
+      },
+      {
+        path: 'setting',
+        component: resolve => require(['@/components/account/Setting'], resolve)
+      },
+      {
+        path: 'general',
+        component: resolve => require(['@/components/account/General'], resolve)
       }
     ]
   }

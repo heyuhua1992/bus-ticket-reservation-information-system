@@ -1,11 +1,15 @@
 {
   "orders": [
     {
+      "QrCode": "",
       "orderCode": "WQ5AFU887710081A",
       "orderMakeTime": "2018-05-18 16:01:59",
       "orderState": "已取消",
       "totalPrice": "360",
-      "insurance": "无保险",
+      "insurance": {
+        "price": 15,
+        "info": "15元/份 保额81万"
+      },
       "ticket": {
         "busType": "客车",
         "ticketPrice": "120",
@@ -35,15 +39,19 @@
         }
       ],
       "contacts": {
-        "passengerName": "张三",
+        "name": "张三",
         "phone": "13700000000"
       }
     },
     {
+      "QrCode": "ccccccccccccccccccccc",
       "orderCode": "WQ5AFU887710081B",
       "orderMakeTime": "2018-05-08 16:40:59",
-      "orderState": "已完成",
-      "insurance": "15元保险",
+      "orderState": "已使用",
+      "insurance": {
+        "price": 15,
+        "info": "15元/份 保额81万"
+      },
       "totalPrice": "375",
       "ticket": {
         "busType": "客车",
@@ -74,7 +82,90 @@
         }
       ],
       "contacts": {
-        "passengerName": "张三",
+        "name": "张三",
+        "phone": "13700000000"
+      }
+    },
+    {
+      "QrCode": "",
+      "orderCode": "WQ5AFU887710081B",
+      "orderMakeTime": "2018-05-08 16:40:59",
+      "orderState": "待支付",
+      "insurance": {
+        "price": 15,
+        "info": "15元/份 保额81万"
+      },
+      "totalPrice": "375",
+      "ticket": {
+        "busType": "客车",
+        "ticketPrice": "110",
+        "start": "广州",
+        "end": "湛江",
+        "startDay": "2018-05-19",
+        "startTime": "12:30"
+      },
+      "passengers": [
+        {
+          "passengerName": "张一",
+          "passengerType": "成人票",
+          "cardType": "身份证",
+          "idCardCode": "44444444444444444444"
+        },
+        {
+          "passengerName": "张二",
+          "passengerType": "成人票",
+          "cardType": "身份证",
+          "idCardCode": "55555555555555555555"
+        },
+        {
+          "passengerName": "张三",
+          "passengerType": "成人票",
+          "cardType": "身份证",
+          "idCardCode": "6666666666666666666"
+        }
+      ],
+      "contacts": {
+        "name": "张三",
+        "phone": "13700000000"
+      }
+    },
+    {
+      "QrCode": "aaaaaaaaaaaaaaaaaaa",
+      "orderCode": "WQ5AFU887710081B",
+      "orderMakeTime": "2018-05-08 16:40:59",
+      "orderState": "待出行",
+      "insurance": {},
+      "totalPrice": "375",
+      "ticket": {
+        "busType": "客车",
+        "ticketPrice": "110",
+        "start": "广州",
+        "end": "湛江",
+        "startDay": "2018-05-19",
+        "startTime": "12:30"
+      },
+      "passengers": [
+        {
+          "passengerName": "张一",
+          "passengerType": "成人票",
+          "cardType": "身份证",
+          "idCardCode": "44444444444444444444"
+        },
+        {
+          "passengerName": "张二",
+          "passengerType": "成人票",
+          "cardType": "身份证",
+          "idCardCode": "55555555555555555555"
+        },
+        {
+          "passengerName": "张三",
+          "passengerType": "成人票",
+          "cardType": "身份证",
+          "idCardCode": "6666666666666666666"
+        }
+      ],
+      "contacts": {
+        "name": "张三",
         "phone": "13700000000"
       }
     }

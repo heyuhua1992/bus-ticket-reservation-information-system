@@ -67,7 +67,7 @@
             </ul>
           </div>
           <div class="menber-bottom">
-            <a href="javascript:;" class="logout" @click="$store.dispatch('Logout')">
+            <a href="javascript:;" class="logout" @click="logout">
               退出
             </a>
           </div>
@@ -141,7 +141,12 @@ export default {
       isOn: false
     }
   },
-  methods: {}
+  methods: {
+    logout () {
+      this.$store.dispatch('Logout')
+      this.$Cookies.remove('userCode')
+    }
+  }
 }
 </script>
 
