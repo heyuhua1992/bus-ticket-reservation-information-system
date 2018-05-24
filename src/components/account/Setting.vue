@@ -185,11 +185,9 @@ export default {
     margin-top 20px
     .info-list
       margin-left 40px
-      border 1px solid #ccc
       &>li
         display flex
         padding 5px 0
-        border-bottom 1px solid #ccc
         &:last-child
           border-bottom none
         &.no-edit

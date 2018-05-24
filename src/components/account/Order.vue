@@ -76,6 +76,9 @@ export default {
         }
       })
     }
+    if (this.$route.query.choose) {
+      this.choose = this.$route.query.choose
+    }
   },
   data () {
     return {

@@ -29,12 +29,12 @@
     },
     {
       "text": "我的订单",
-      "to": "/",
+      "to": "/account/order",
       "icon": "order"
     },
     {
-      "text": "我的车票",
-      "to": "/",
+      "text": "我的信息",
+      "to": "/account/setting",
       "icon": "ticket"
     }
   ],

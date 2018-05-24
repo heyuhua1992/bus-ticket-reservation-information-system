@@ -29,28 +29,28 @@
     <div class="mem-order">
       <ul>
         <li>
-          <a>
+          <router-link to="/account/order">
             <div class="all-ico"></div>
             <p>全部订单</p>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a>
+          <router-link :to="{path:'/account/order', query:{choose: 1}}">
             <div class="pay-ico"></div>
             <p>
               待支付
-              <span class="un-pay-count">0</span>
+              <span class="un-pay-count">{{numbers.waitPay}}</span>
             </p>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a>
+          <router-link :to="{path:'/account/order', query:{choose: 2}}">
             <div class="travel-ico"></div>
             <p>
               待出行
-              <span class="un-use-count">0</span>
+              <span class="un-use-count">{{numbers.noTravel}}</span>
             </p>
-          </a>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -58,7 +58,7 @@
   <div class="clearfix my-order">
     <h3>
       我的订单
-      <a href="" class="more-order">查看全部订单</a>
+      <router-link to="/account/order" class="more-order">查看全部订单</router-link>
     </h3>
     <OrderList :orderData="orderData" :showLis="3"/>
   </div>
@@ -79,6 +79,39 @@ export default {
   },
   beforeMount () {
     this.setTitleText('首页')
+    this.initNumber()
+  },
+  data () {
+    return {
+      numbers: {
+        all: 0, // 全部订单
+        waitPay: 0, // 待支付
+        noTravel: 0, // 待出行
+        used: 0, // 已使用
+        cancel: 0 // 已取消
+      }
+    }
+  },
+  methods: {
+    initNumber () {
+      if (this.orderData) {
+        this.$nextTick(() => {
+          let orders = this.orderData.orders
+          for (let i = 0; i < orders.length; ++i) {
+            this.numbers.all++
+            if (orders[i].orderState === '已取消') {
+              this.numbers.cancel++
+            } else if (orders[i].orderState === '已使用') {
+              this.numbers.used++
+            } else if (orders[i].orderState === '待支付') {
+              this.numbers.waitPay++
+            } else if (orders[i].orderState === '待出行') {
+              this.numbers.noTravel++
+            }
+          }
+        })
+      }
+    }
   },
   components: {
     OrderList

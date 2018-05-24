@@ -67,7 +67,7 @@
             </ul>
           </div>
           <div class="menber-bottom">
-            <a href="javascript:;" class="logout" @click="logout">
+            <a class="logout" @click="logout">
               退出
             </a>
           </div>

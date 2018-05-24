@@ -321,23 +321,7 @@ export default {
     })
   },
   beforeMount () {
-    this.$nextTick(() => {
-      let arr = this.$route.query.time.split('-')
-      arr[1]--
-      this.$refs.datepick.selectDate(new Date(...arr))
-    })
-    if (!this.$route.query.leave || !this.$route.query.arrive) {
-      let tipsData = {
-        tips: '您还没有输入出发站点、到达站点，3s后回到首页,无反应可直接点击跳转',
-        back: '/',
-        wait: 3000
-      }
-      this.$router.push({path: '/informationtips', query: tipsData})
-    }
-    this.buslists = (require('./busLists')).lists
-    this.initStation(this.buslists)
-    this.initMove()
-    this.initLists()
+    this.init()
   },
   data () {
     return {
@@ -404,6 +388,25 @@ export default {
     }
   },
   methods: {
+    init () {
+      this.$nextTick(() => {
+        let arr = this.$route.query.time.split('-')
+        arr[1]--
+        this.$refs.datepick.selectDate(new Date(...arr))
+      })
+      if (!this.$route.query.leave || !this.$route.query.arrive) {
+        let tipsData = {
+          tips: '您还没有输入出发站点、到达站点，3s后回到首页,无反应可直接点击跳转',
+          back: '/',
+          wait: 3000
+        }
+        this.$router.push({path: '/informationtips', query: tipsData})
+      }
+      this.buslists = (require('./busLists')).lists
+      this.initStation(this.buslists)
+      this.initMove()
+      this.initLists()
+    },
     showPage (page) {
       this.pageMsg.currentPage = page
     },
@@ -456,6 +459,7 @@ export default {
         }
         this.$router.push({path: '/buslist', query: msg})
         console.log('后台接收中...')
+        this.init()
       }
     },
     showDateMsg (addDay) {
