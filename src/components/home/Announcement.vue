@@ -14,7 +14,7 @@
                  v-show="show"
                  v-for="(item, index) in announcementData[selected]"
                  :key="'content' + index"
-                 :to="'/announcement/' + selected + '/' + item.to">
+                 :to="{path:'/announcementdetails/', query: pathInfo(item)}">
       <span class="type" v-show="selected === initData[0].name">
         【{{initData[item.type].title}}】
       </span>
@@ -24,7 +24,7 @@
     <div v-show="!show" class="empty">
       还没有内容
     </div>
-    <router-link class="more" :to="'/announcement/' + selected">
+    <router-link class="more" :to="'/announcementdetails/' + selected">
       更多&gt;&gt;&gt;
     </router-link>
   </div>
@@ -42,7 +42,7 @@ export default {
           name: 'new'
         },
         {
-          title: '最新动态',
+          title: '最近新闻',
           name: 'recentNews'
         },
         {
@@ -193,6 +193,13 @@ export default {
   methods: {
     selcteTitle (index) {
       this.selected = this.initData[index].name
+    },
+    pathInfo (item) {
+      return {
+        path: this.selected,
+        title: item.title,
+        date: item.date
+      }
     }
   },
   computed: {

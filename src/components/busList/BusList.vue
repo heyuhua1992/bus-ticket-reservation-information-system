@@ -16,9 +16,11 @@
              @mouseout="setHover(false)"
              @click.stop
              v-show="leaveCityBox">
-          <SwitchCity :cityType="'leave'"
-                      @setInputText="setInputText"
-                      :left="52"/>
+          <keep-alive>
+            <SwitchCity :cityType="'leave'"
+                        @setInputText="setInputText"
+                        :left="52"/>
+          </keep-alive>
         </div>
       </div>
       <div class="exchange" @click="toggle">
@@ -38,9 +40,11 @@
              @mouseout="setHover(false)"
              @click.stop
              v-show="arriveCityBox">
-          <SwitchCity :cityType="'arrive'"
-                      @setInputText="setInputText"
-                      :left="52"/>
+          <keep-alive>
+            <SwitchCity :cityType="'arrive'"
+                        @setInputText="setInputText"
+                        :left="52"/>
+          </keep-alive>
         </div>
       </div>
       <div class="date input-wrapper">
@@ -260,26 +264,26 @@
               v-for="(item, index) in lists"
               :key="'row' + index"
               v-if="isShowPage(index)">
-            <div class="dp-time">{{ item.startTime }}</div>
+            <div class="dp-time">{{ hoursMinutes(item.departuretime) }}</div>
             <div class="station">
-              <p class="start">{{ item.start }}</p>
-              <p class="end">{{ item.end }}</p>
+              <p class="start">{{ item.startstation }}</p>
+              <p class="end">{{ item.endstation }}</p>
             </div>
             <div class="bus-type">
-              <div class="type">{{ item.busType }}</div>
+              <div class="type">{{ item.comment }}</div>
               <p>
-                <span>{{ item.otherType }}</span>
+                <span>{{ stationtype[item.stationtype] }}</span>
               </p>
             </div>
             <div class="price">
               <span>
                 &yen;
-                <i>{{ item.ticket }}</i>
+                <i>{{ item.price }}</i>
               </span>
             </div>
             <div class="book">
               <a class="btn" @click="booking(item)">预订</a>
-              <p class="remaining">剩余{{ item.remaining }}张</p>
+              <p class="remaining">剩余{{ item.ticketsleft }}张</p>
             </div>
           </li>
           <li v-show="lists.length === 0">
@@ -310,6 +314,8 @@
 import VuejsPaginate from 'vuejs-paginate'
 import SwitchCity from '@/components/switchCity/SwitchCity'
 import Datepicker from '@/components/datepicker/Datepicker'
+/* eslint-disable no-unused-vars */
+import { getTicket } from '@/api/api'
 export default {
   name: 'bus-list',
   beforeCreate () {
@@ -325,7 +331,10 @@ export default {
   },
   data () {
     return {
-      stations: {},
+      stations: {
+        arriveStation: [],
+        leaveStation: []
+      },
       leaveCity: this.$route.query.leave,
       arriveCity: this.$route.query.arrive,
       leaveCityBox: false, // 是否显示出发城市的选择框
@@ -347,7 +356,7 @@ export default {
       },
       // 显示的起始时间向右位移多少
       move: 0,
-      current: this.dayFormatting(),
+      current: -1,
       leaveTime: [
         {
           text: '凌晨 (00:00-06:00)',
@@ -384,16 +393,12 @@ export default {
       },
       buslists: [],
       lists: [],
-      weekArr: ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+      weekArr: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+      stationtype: this.$store.state.stationtype
     }
   },
   methods: {
     init () {
-      this.$nextTick(() => {
-        let arr = this.$route.query.time.split('-')
-        arr[1]--
-        this.$refs.datepick.selectDate(new Date(...arr))
-      })
       if (!this.$route.query.leave || !this.$route.query.arrive) {
         let tipsData = {
           tips: '您还没有输入出发站点、到达站点，3s后回到首页,无反应可直接点击跳转',
@@ -402,10 +407,12 @@ export default {
         }
         this.$router.push({path: '/informationtips', query: tipsData})
       }
-      this.buslists = (require('./busLists')).lists
-      this.initStation(this.buslists)
-      this.initMove()
-      this.initLists()
+      this.$nextTick(() => {
+        let arr = this.$route.query.time.split('-')
+        arr[1]--
+        this.$refs.datepick.selectDate(new Date(...arr))
+      })
+      this.refresh()
     },
     showPage (page) {
       this.pageMsg.currentPage = page
@@ -458,7 +465,6 @@ export default {
           time: searchMsg.startDateTime.toLocaleDateString().replace(/\//g, '-')
         }
         this.$router.push({path: '/buslist', query: msg})
-        console.log('后台接收中...')
         this.init()
       }
     },
@@ -546,6 +552,7 @@ export default {
       let today = this.$store.state.today
       let move = (startDateTime.getTime() - today.getTime()) / (24 * 3600 * 1000)
       this.move = Math.ceil(move)
+      this.current = this.dayFormatting()
     },
     initLists (str) {
       this.pageMsg.currentPage = 1
@@ -582,10 +589,19 @@ export default {
       let timeStamp = (arr[0] * 3600 + arr[1] * 60) * 1000
       return timeStamp
     },
+    // 把时间戳转化为 小时分钟
+    hoursMinutes (timeStamp) {
+      let date = new Date(timeStamp)
+      let hours = date.getHours()
+      let minute = date.getMinutes()
+      hours = hours.length === 1 ? '0' + hours : hours
+      minute = minute.length === 1 ? '0' + minute : minute
+      return `${hours}:${minute}`
+    },
     // 根据时间段进行过滤
     leaveTimeFilter (item) {
       let lt = this.leaveTimeResult
-      let st = this.timeTransform(item.startTime)
+      let st = this.timeTransform(this.hoursMinutes(item.departuretime)) // 出发时间戳
       if (lt.other.length > 0) {
         lt.unlimit = false
       } else if (lt.other.length < 1) {
@@ -596,8 +612,7 @@ export default {
       } else {
         let oth = lt.other
         for (let i = 0; i < oth.length; i++) {
-          oth[i] = oth[i] - 0
-          let right = this.leaveTime[oth[i] - 1].timeStamp
+          let right = this.leaveTime[oth[i] - 0 - 1].timeStamp // 拿到选择的时段的时间戳
           let left = oth[i] === 1 ? 0 : this.leaveTime[oth[i] - 2].timeStamp
           if (st <= right && st > left) {
             return item
@@ -613,7 +628,7 @@ export default {
         result.unlimit = true
       }
       if (data && !result.unlimit) {
-        let d = type === 'leave' ? data.start : data.end
+        let d = type === 'leave' ? data.startstation : data.endstation
         if (result.other.indexOf(d) === -1) {
           return
         }
@@ -634,7 +649,6 @@ export default {
       } else if (cur === 1) {
         return false
       }
-
       if (index <= cur * num && index > (cur - 1) * num) {
         return true
       } else {
@@ -646,8 +660,8 @@ export default {
       let s = new Set()
       let e = new Set()
       buslists.map((item) => {
-        s.add(item.start)
-        e.add(item.end)
+        s.add(item.startstation)
+        e.add(item.endstation)
       })
       this.stations.leaveStation = [...s]
       this.stations.arriveStation = [...e]
@@ -662,17 +676,42 @@ export default {
     },
     // 预订
     booking (item) {
-      let ct = this.dateTransform(this.current)
-      let busData = {
-        startTime: item.startTime,
-        start: item.start,
-        end: item.end,
-        busType: item.busType,
-        ticket: item.ticket,
-        weekDay: this.weekArr[ct.getDay() % 7],
-        date: ct.toLocaleDateString().replace(/\//g, '-')
+      if (this.$store.state.isLogin) {
+        let ct = this.dateTransform(this.current)
+        let busData = {
+          ticketid: item.ticketid,
+          startTime: item.departuretime,
+          start: item.startstation,
+          end: item.endstation,
+          busType: item.comment,
+          ticket: item.price,
+          weekDay: this.weekArr[ct.getDay() % 7],
+          date: ct.toLocaleDateString().replace(/\//g, '-')
+        }
+        this.$router.push({path: '/booking', query: busData})
+      } else {
+        alert('请先登录')
       }
-      this.$router.push({path: '/booking', query: busData})
+    },
+    refresh () {
+      let q = this.$route.query
+      let sendMsg = {
+        startcity: q.leave,
+        endcity: q.arrive,
+        date: q.time
+      }
+      getTicket(sendMsg)
+        .then(data => {
+          if (data.header.isSuccess === 0) {
+            this.$set(this, 'buslists', data.body)
+            this.initStation(this.buslists)
+            this.initMove()
+            this.initLists()
+          } else {
+            alert(data.header.msg)
+          }
+        })
+        .catch()
     }
   },
   components: {

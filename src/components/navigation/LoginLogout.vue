@@ -20,7 +20,7 @@
         <div class="dd-bubble" v-show="isOn">
           <div class="header-u-info">
             <div class="header-uname">
-              <b>火昱</b>
+              <b>{{$store.state.userInfo.username}}</b>
               <p class="vip-type">
                 <router-link to="/">
                   <span>会员</span>
@@ -143,6 +143,7 @@ export default {
   },
   methods: {
     logout () {
+      this.$store.commit('clearUserInfo')
       this.$store.dispatch('Logout')
       this.$Cookies.remove('userCode')
     }

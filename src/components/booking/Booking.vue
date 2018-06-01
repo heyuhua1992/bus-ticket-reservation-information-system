@@ -16,7 +16,7 @@
             {{busData.start}}
           </div>
           <div class="date">
-            <p>{{busData.date}}&nbsp;&nbsp;{{busData.weekDay}}&nbsp;&nbsp;{{busData.startTime}}</p>
+            <p>{{busData.date}}&nbsp;&nbsp;{{busData.weekDay}}&nbsp;&nbsp;{{ hoursMinutes( busData.startTime ) }}</p>
             <i class="long-arrow"></i>
           </div>
           <div class="arrive">
@@ -103,6 +103,8 @@
                 <input type="text"
                        v-model="itemPassengers.name"
                        maxlength="20"
+                       :name="'name' + index"
+                       v-validate="{required: true, regex: /^[\u4e00-\u9fa5]+$/}"
                        placeholder="与证件姓名保持一致">
               </label>
               <p class="take-ticket-person">
@@ -112,14 +114,22 @@
                          @click="setGetTicketPerson(itemPassengers)">
                   设为取票人
                 </label>
+                <span v-show="errors.has('name' + index)">
+                  ({{ errors.first('name' + index) }})
+                </span>
+                <span v-show="!errors.has('name' + index) && errors.has('id' + index)">
+                  ({{ errors.first('id' + index) }})
+                </span>
               </p>
             </div>
             <div class="passenger-id">
               <label>
-                <span>证件信息</span>
+                <span>证件ID</span>
                 <input type="text"
+                       v-validate="{required: true, regex: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/}"
                        v-model="itemPassengers.id"
                        maxlength="20"
+                       :name="'id' + index"
                        placeholder="与证件号码保持一致">
               </label>
             </div>
@@ -141,7 +151,7 @@
             名乘客
           </span>
         </div>
-        <select class="insurance" v-model="insuranceSelcet">
+        <select class="insurance" v-model="insuranceSelcet" disabled>
           <option v-for="(itemInsurance, index) in insurance"
                   :key="'insurance' + index"
                   :value="itemInsurance.price">
@@ -156,6 +166,7 @@
             <label>
               姓名
               <input type="text"
+                     disabled
                      v-model="getTicketPerson.name"
                      placeholder="取票人姓名">
             </label>
@@ -164,14 +175,20 @@
             <label>
               手机号码
               <input type="text"
+                     v-validate="{required: true, regex: /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/ }"
                      v-model="getTicketPerson.phone"
-                     placeholder="接收出票信息联系手机">
+                     name="phone"
+                     placeholder="取票人联系手机">
             </label>
+            <span class="span-tips" v-show="errors.has('phone')">
+              号码错误
+            </span>
           </div>
           <div>
             <label>
               二代身份证
               <input type="text"
+                     disabled
                      v-model="getTicketPerson.id"
                      placeholder="与证件号码保持一致">
             </label>
@@ -185,7 +202,7 @@
           共
           <i>{{ passengers.length }}</i>
           名乘车人 出发时间：
-          <i>{{busData.date}}&nbsp;&nbsp;{{busData.weekDay}}&nbsp;&nbsp;{{busData.startTime}}</i>
+          <i>{{busData.date}}&nbsp;&nbsp;{{busData.weekDay}}&nbsp;&nbsp;{{ hoursMinutes(busData.startTime) }}</i>
         </div>
         <div class="agreement">
           <label>
@@ -210,17 +227,11 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { bookTicket } from '@/api/api'
 export default {
   name: 'booking',
   beforeMount () {
-    // if (!this.$store.state.isLogin) {
-    //   let tipsData = {
-    //     tips: '您还没有登陆，3s后回到首页,无反应可直接点击跳转',
-    //     back: '/',
-    //     wait: 3000
-    //   }
-    //   this.$router.push({path: '/informationtips', query: tipsData})
-    // }
     let query = this.$route.query
     this.busData = {
       startTime: query.startTime,
@@ -235,7 +246,7 @@ export default {
   data () {
     return {
       busData: {
-        // startTime: '06:20',
+        // startTime: '时间戳',
         // start: '广州海珠客运站1',
         // end: '湛江1',
         // busType: '客车',
@@ -246,14 +257,9 @@ export default {
       isShrink: true,
       general: [
         {
-          name: '何煜华',
+          name: '测试员',
           id: '440823199001015711',
-          phone: ''
-        },
-        {
-          name: 'fff',
-          id: '440823199001015712',
-          phone: ''
+          phone: '13729044568'
         }
       ],
       passengers: [
@@ -283,9 +289,9 @@ export default {
           price: 0
         }
       ],
-      mostPassengers: 3,
-      total: '',
-      getTicketPerson: ''
+      mostPassengers: 2,
+      total: 0,
+      getTicketPerson: {}
     }
   },
   methods: {
@@ -386,19 +392,70 @@ export default {
       }
     },
     send () {
-      let data = {}
-      let insurance = this.insurance.filter((item) => {
-        if (item.price === this.insuranceSelcet) {
-          return item
+      if (!this.$store.state.isLogin) {
+        alert('您还没有登陆，请先登录')
+      }
+      // let data = {}
+      // let insurance = this.insurance.filter((item) => {
+      //   if (item.price === this.insuranceSelcet) {
+      //     return item
+      //   }
+      // })
+      // Object.assign(data, {
+      //   passengers: this.passengers,
+      //   getTicketPerson: this.getTicketPerson,
+      //   busData: this.busData,
+      //   total: this.total,
+      //   insurance: insurance
+      // })
+      let sendData = {
+        ticketid: this.$route.query.ticketid,
+        ticketnum: this.passengers.length,
+        userid: this.$store.state.userInfo.id,
+        money: this.total,
+        taketicketname: this.getTicketPerson.name,
+        idtype: '二代身份证',
+        idnumber: this.getTicketPerson.id,
+        phone: this.getTicketPerson.phone
+      }
+      for (let ite in sendData) {
+        if (sendData[ite] === '' || sendData[ite] === [] || sendData[ite] === {} || sendData[ite] === null) {
+          return
         }
-      })
-      Object.assign(data, {
-        passengers: this.passengers,
-        getTicketPerson: this.getTicketPerson,
-        busData: this.busData,
-        total: this.total,
-        insurance: insurance
-      })
+      }
+      let i = 1
+      for (let item of this.passengers) {
+        if (i > 2) {
+          return
+        }
+        sendData['passengername' + i] = item.name
+        sendData['idnumber' + i] = item.id
+        sendData['idtype' + i] = '二代身份证'
+        i++
+      }
+      bookTicket(sendData)
+        .then(data => {
+          if (data.header.isSuccess === 0) {
+            // 还有什么操作？？
+            let tipsData = {
+              tips: data.header.msg + '，3秒后到达订单页面,无反应可直接点击跳转',
+              back: '/account/order',
+              wait: 3000
+            }
+            this.$router.push({path: '/informationtips', query: tipsData})
+          } else {
+            alert(data.header.msg)
+          }
+        })
+    },
+    // 把时间戳转化为 小时分钟
+    hoursMinutes (timeStamp) {
+      let date = new Date(timeStamp - 0)
+      let hours = date.getHours()
+      let minute = date.getMinutes()
+      hours = hours.length === 1 ? '0' + hours : hours
+      minute = minute.length === 1 ? '0' + minute : minute
+      return `${hours}:${minute}`
     }
   },
   computed: {
@@ -412,7 +469,7 @@ export default {
     getTicketPerson: {
       deep: true,
       handler: function () {
-        if (this.getTicketPerson !== '') {
+        if (this.getTicketPerson !== {}) {
           for (let i = 0; i < this.passengers.length; ++i) {
             if (this.passengers[i].getTick === true) {
               if (this.passengers[i].name !== this.getTicketPerson.name || this.passengers[i].id !== this.getTicketPerson.id) {
@@ -819,6 +876,11 @@ export default {
                 min-width 166px
                 border-radius 2px
                 outline none
+            .span-tips
+              position absolute
+              margin-top -55px
+              margin-left 80px
+              color red
     .summary
       display flex
       padding-top 20px

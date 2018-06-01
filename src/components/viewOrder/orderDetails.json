@@ -1,0 +1,45 @@
+{
+    "header": {
+        "isSuccess": 0
+    },
+    "body": [
+        {
+            "startcity": "广州",
+            "startstationname": "广东省汽车客运站333333333333",
+            "endcity": "深圳",
+            "endstationname": "深圳罗湖客运站",
+            "departuretime": 1527382724000,
+            "comment": "大型座席高一级",
+            "stationtype": 1,
+            "arrivaltime": 1527401042000,
+            "mileage": "80",
+            "price": 65,
+            "passengername": "张三",
+            "idtype": "二代身份证",
+            "idnumber": "441885544878489965",
+            "ticketstatus": 1,
+            "trainid": 9,
+            "ticketid": 14,
+            "orderdetailid": 6
+        },
+        {
+            "startcity": "广州",
+            "startstationname": "广东省汽车客运站",
+            "endcity": "深圳",
+            "endstationname": "深圳罗湖客运站",
+            "departuretime": 1527382724000,
+            "comment": "大型座席高一级",
+            "stationtype": 1,
+            "arrivaltime": 1527401042000,
+            "mileage": "80",
+            "price": 65,
+            "passengername": "李四",
+            "idtype": "二代身份证",
+            "idnumber": "881445566235877741",
+            "ticketstatus": 0,
+            "trainid": 9,
+            "ticketid": 14,
+            "orderdetailid": 7
+        }
+    ]
+}

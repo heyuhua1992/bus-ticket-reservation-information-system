@@ -4,12 +4,12 @@
     <ul class="info-list" :class="{edit: isEdit}">
       <li class="phone">
         <span>手机</span>
-        <p>+86  {{ accountInfo.phone }}</p>
+        <p class="hid">+86  {{ accountInfo.phone }} </p>
         <div class="edit-box">
           <em>+86</em>
           <input type="text"
                  v-model="accountInfo.phone"
-                 v-validate="{required: true, regex: /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/ }"
+                 v-validate="{regex: /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/ }"
                  name="phone">
           <p class="tips" v-show="errors.has('phone')">
             {{ errors.first('phone') }}
@@ -18,33 +18,33 @@
       </li>
       <li class="email">
         <span>邮箱</span>
-        <p>{{ accountInfo.email }}</p>
+        <p class="hid">{{ accountInfo.email }}</p>
         <div class="edit-box">
           <input type="text"
                  v-model="accountInfo.email"
-                 v-validate="{required: true, email: true}"
+                 v-validate="{email: true}"
                  name="email">
           <p class="tips" v-show="errors.has('email')">
             {{ errors.first('email') }}
           </p>
         </div>
       </li>
-      <li class="nickname">
-        <span>昵称</span>
+      <li class="nickname no-edit">
+        <span>登陆名</span>
         <p>{{ accountInfo.nickname }}</p>
-        <div class="edit-box">
-          <input type="text"
-                 v-model="accountInfo.nickname"
-                 v-validate="{required: true, max: 6, min: 2}"
-                 name="nickname">
-          <p class="tips" v-show="errors.has('nickname')">
-            {{ errors.first('nickname') }}
-          </p>
-        </div>
+        <!--<div class="edit-box">-->
+          <!--<input type="text"-->
+                 <!--v-model="accountInfo.nickname"-->
+                 <!--v-validate="{required: true}"-->
+                 <!--name="nickname">-->
+          <!--<p class="tips" v-show="errors.has('nickname')">-->
+            <!--{{ errors.first('nickname') }}-->
+          <!--</p>-->
+        <!--</div>-->
       </li>
       <li class="gender">
         <span>性别</span>
-        <p>{{ accountInfo.gender }}</p>
+        <p class="hid">{{ accountInfo.gender }}</p>
         <div class="edit-box">
           <div class="radio-group">
             <label class="radio-btn is-active">
@@ -68,11 +68,11 @@
       </li>
       <li class="date-of-birth">
         <span>出生日期</span>
-        <p>{{ accountInfo.dateOfBirth }}</p>
+        <p class="hid">{{ accountInfo.dateOfBirth }}</p>
         <div class="edit-box">
           <input type="text"
                  v-model="accountInfo.dateOfBirth"
-                 v-validate="{required: true, date_format: ('YYYY-MM-DD')}"
+                 v-validate="{date_format: ('YYYY-MM-DD')}"
                  name="date-of-birth">
           <p class="tips" v-show="errors.has('date-of-birth')">
             {{ errors.first('date-of-birth') }}
@@ -81,33 +81,48 @@
       </li>
       <li class="address">
         <span>地址</span>
-        <p>{{ accountInfo.address }}</p>
+        <p class="hid">{{ accountInfo.address }}</p>
         <div class="edit-box">
           <input type="text"
-                 v-model="accountInfo.address"
-                 v-validate="{required: true}"
-                 name="address">
-          <p class="tips" v-show="errors.has('address')">
-            {{ errors.first('address') }}
-          </p>
+                 v-model="accountInfo.address">
         </div>
       </li>
       <li class="name no-edit">
         <span>姓名</span>
-        <p>{{ accountInfo.name }}</p>
+        <p :class="{hid:isShow.name}">{{ accountInfo.name }}</p>
+        <div class="edit-box" v-if="isShow.name">
+          <input type="text"
+                 placeholder="仅有一次修改机会"
+                 v-model="accountInfo.name"
+                 v-validate="{regex: /^[\u4e00-\u9fa5]+$/ }"
+                 name="name">
+          <p class="tips" v-show="errors.has('name')">
+            {{ errors.first('name') }}
+          </p>
+        </div>
       </li>
       <li class="ID no-edit">
-        <span>{{ accountInfo.IDType }}</span>
-        <p>{{ accountInfo.IDNumber }}</p>
+        <span>{{ accountInfo.IDType ? accountInfo.IDType : '身份证' }}</span>
+        <p :class="{hid:isShow.IDNumber}">{{ accountInfo.IDNumber }}</p>
+        <div class="edit-box" v-if="isShow.IDNumber">
+          <input type="text"
+                 placeholder="仅有一次修改机会"
+                 v-model="accountInfo.IDNumber"
+                 v-validate="{regex: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/}"
+                 name="IDNumber">
+          <p class="tips" v-show="errors.has('IDNumber')">
+            {{ errors.first('IDNumber') }}
+          </p>
+        </div>
       </li>
       <li class="accountStatus no-edit">
         <span>账号状态</span>
-        <p>{{ accountInfo.accountStatus }}</p>
+        <p>{{ accountInfo.accountStatus ? accountInfo.accountStatus : '正常' }}</p>
       </li>
-      <li class="joinDate no-edit">
-        <span>注册时间</span>
-        <p>{{ accountInfo.joinDate }}</p>
-      </li>
+      <!--<li class="joinDate no-edit">-->
+        <!--<span>注册时间</span>-->
+        <!--<p>{{ accountInfo.joinDate }}</p>-->
+      <!--</li>-->
     </ul>
     <div class="btns">
       <div class="view" v-if="!isEdit">
@@ -126,6 +141,8 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { getPersonInfo, setPersonInfo } from '@/api/api'
 export default {
   name: 'setting',
   props: {
@@ -140,20 +157,59 @@ export default {
     return {
       accountInfo: {},
       accountInfoStr: '', // 原始的数据，用于判断用于有没有修改数据
-      isEdit: false
+      isEdit: false,
+      isShow: {
+        name: false,
+        IDNumber: false
+      }
     }
   },
   methods: {
     initPage () {
-      this.accountInfo = require('./accountInfo').user
-      this.accountInfoStr = JSON.stringify(this.accountInfo)
+      let userid = this.$store.state.userInfo.id
+      getPersonInfo({userid: userid})
+        .then(data => {
+          if (data.header.isSuccess === 0) {
+            let info = data.body[0]
+            let str = new Date(info.birthday).toLocaleDateString().split('/')
+            for (let i in str) {
+              if (str[i].length < 2) {
+                str[i] = '0' + str[i]
+              }
+            }
+            str = str.join('-')
+            this.accountInfo = {
+              phone: info.phone,
+              email: info.email,
+              nickname: info.username,
+              name: info.name,
+              gender: info.sex === 1 ? '女' : '男',
+              dateOfBirth: str,
+              address: info.address,
+              accountStatus: info.status,
+              joinDate: info.registrationdate,
+              password: info.password,
+              IDType: info.idtype,
+              IDNumber: info.idnumber
+            }
+            if (!info.name) {
+              this.isShow.name = true
+            }
+            if (!info.idnumber) {
+              this.isShow.IDNumber = true
+            }
+            this.accountInfoStr = JSON.stringify(this.accountInfo)
+          } else {
+            alert(data.header.msg)
+          }
+        })
     },
     goEdit (bool) {
       if (bool) {
         this.isEdit = bool
       } else {
         let flag = this.$validator.flags
-        let arr = ['phone', 'email', 'nickname', 'date-of-birth', 'address']
+        let arr = ['phone', 'email', 'date-of-birth']
         for (let item of arr) {
           if (!flag[item] || !flag[item].valid) {
             return
@@ -165,8 +221,25 @@ export default {
     },
     sendToServer () {
       if (this.accountInfoStr !== JSON.stringify(this.accountInfo)) {
-        console.log('已经更新数据')
-        this.initPage()
+        let a = this.accountInfo
+        let data = {
+          id: this.$store.state.userInfo.id,
+          name: a.name,
+          phone: a.phone,
+          sex: a.gender !== '男' ? 1 : 0,
+          birthday: a.dateOfBirth + ' 00:00:00',
+          email: a.email,
+          idnumber: a.IDNumber,
+          address: a.address
+        }
+        setPersonInfo(data)
+          .then(data => {
+            if (data.header.isSuccess === 0) {
+              this.initPage()
+            } else {
+              alert(data.header.msg)
+            }
+          })
       }
     }
   },
@@ -291,8 +364,8 @@ export default {
             padding-left 40px
     .edit
       .phone, .email, .nickname,
-      .gender, .date-of-birth, .address
-        &>p
+      .gender, .date-of-birth, .address, .name , .ID
+        &>p.hid
           display none!important
         .edit-box
           display block

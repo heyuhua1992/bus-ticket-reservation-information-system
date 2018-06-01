@@ -29,12 +29,12 @@
       </div>
       <div class="register-hidden-gruop"></div>
       <div class="center-div code-wrapper">
-        <input  class="code" type="text">
-        <div class="check"></div>
+        <input  class="code" type="text" v-model="userMsg.code">
+        <!--<div class="check"></div>-->
         <a href="javascript:;" class="send-btn" @click="sendMsg">
           {{ btnText }}
         </a>
-        <p class="tips">验证码已发到你手机上了，5分钟内有效。</p>
+        <p class="tips" :class="{hid:hidTips}">验证码已发到你手机上了，5分钟内有效。</p>
       </div>
       <div class="register-hidden-gruop">
         <div class="pc-register-descript">
@@ -49,34 +49,10 @@
       <input class="center-div register-btn"
              :class="{'no-check': !agree}"
              type="submit"
-             @click="nextStep"
+             @click="sendUserMsg"
              value="注册">
       <div class="register-hidden-gruop text-right">
         <router-link to="/login">已有账号，直接登录></router-link>
-      </div>
-    </div>
-  </div>
-  <div class="popup-mask" v-show="showMask">
-    <div class="popup-box">
-      <div class="popup-titleBar">
-        <div class="popup-title">
-          <i class="topIcon"></i>
-          请输入验证码
-        </div>
-        <a class="popup-close" href="javascript:;" @click="hidMask"></a>
-      </div>
-      <div class="popup-main">
-        <div class="popup-content">
-          <img class="popup-captchaImg" src="">
-          <p class="popup-change">
-            <a href="javascript:;">换一张</a>
-          </p>
-          <input class="popup-text" type="text" placeholder="请输入图片中的内容">
-        </div>
-        <div class="popup-buttons">
-          <input type="button" value="确定" class="popup-btn popup-btn-primary">
-          <input type="button" value="取消" class="popup-btn" @click="hidMask">
-        </div>
       </div>
     </div>
   </div>
@@ -85,6 +61,8 @@
 
 <script>
 import SecurityLevel from '@/components/securityLevel/SecurityLevel'
+/* eslint-disable no-unused-vars */
+import { sendCaptcha, register } from '@/api/api'
 export default {
   name: 'step1',
   props: {
@@ -93,6 +71,9 @@ export default {
     },
     userMsg: {
       type: Object
+      // phone: '',
+      // password: '',
+      // code: ''
     }
   },
   data () {
@@ -101,8 +82,8 @@ export default {
       agree: false,
       // 发送短信btn 文字变化
       btnText: '点击获取',
-      // 遮罩层
-      showMask: false
+      // 发送短信提示
+      hidTips: true
     }
   },
   methods: {
@@ -114,12 +95,19 @@ export default {
         /* eslint-disable no-useless-return */
         return
       } else if (_pho && _pho.valid && _psw && _psw.valid) {
-        console.log('发送短信')
-        this.showMask = true
+        let phone = this.userMsg.phone
+        sendCaptcha({username: phone})
+          .then(data => {
+            if (data.header.isSuccess === 0) {
+              this.hidTips = false
+              setTimeout(() => {
+                this.hidTips = true
+              }, 5000)
+            } else {
+              alert(data.header.msg)
+            }
+          })
       }
-    },
-    hidMask () {
-      this.showMask = false
     },
     nextStep () {
       if (this.agree) {
@@ -132,6 +120,33 @@ export default {
           .catch(error => {
             console.log(error)
           })
+      }
+    },
+    hidMask () {
+      this.showMask = false
+    },
+    sendUserMsg () {
+      let u = this.userMsg
+      if (u.code && u.password && u.phone) {
+        let userInfo = {
+          username: u.phone,
+          password: u.password,
+          captcha: u.code
+        }
+        register(userInfo)
+          .then(data => {
+            if (data.header.isSuccess === 0) {
+              let tipsData = {
+                tips: '注册成功，3秒后返回登陆页面,无反应可直接点击跳转',
+                back: '/login',
+                wait: 3000
+              }
+              this.$router.push({path: '/informationtips', query: tipsData})
+            } else {
+              alert(data.header.msg)
+            }
+          })
+          .catch(() => {})
       }
     }
   },
@@ -190,6 +205,8 @@ export default {
           top 12px
           transform translate3d(100%, 0, 0)
           font-size 12px
+          &.hid
+            display none
       .register-hidden-gruop
         width 415px
         height 40px
@@ -265,113 +282,4 @@ export default {
         text-align right
         a
           color #00a1d6
-  .popup-mask
-    position fixed
-    top 0
-    left 0
-    width 100%
-    height 100%
-    margin 0
-    padding 0
-    background-color rgba(0, 0, 0, .7)
-    z-index 999
-    .popup-box
-      border-radius 8px
-      box-shadow 0 3px 26px rgba(0,0,0,.9)
-      position absolute
-      left 50%
-      top 50%
-      width 326px
-      transform translate3d(-50%,-50%,0)
-      background-color #fff
-      .popup-titleBar
-        height 29px
-        font-size 14px
-        line-height 29px
-        padding 13px 25px 10px
-        text-indent 5px
-        color #222
-        font-weight 700
-        border-bottom 1px solid #ddd
-        overflow hidden
-        text-overflow ellipsis
-        cursor default
-        .popup-title
-          .topIcon
-            display block
-            float left
-            width 6px
-            height 13px
-            margin-top 8px
-            margin-right 2px
-            background url("./png/icons.png") -43px -9px
-        .popup-close
-          position absolute
-          margin-top 17px
-          top 4px
-          right 12px
-          width 12px
-          height 12px
-          text-indent -9999em
-          background url("./png/icons.png") -162px -68px
-      .popup-main
-        text-align center
-        vertical-align middle
-        min-width 9em
-        padding 20px 0 21px
-        .popup-content
-          .popup-captchaImg
-            display block
-            width 100px
-            height 30px
-            margin 0 auto
-          .popup-change
-            padding 10px 0
-            text-align center
-            a
-              color #00a1d6
-              border none
-              font-size 12px
-          .popup-text
-            border 0
-            border-bottom 1px solid #ddd
-            outline none
-            color #a5a5a5
-            text-align center
-            font-size 13px
-            line-height 24px
-        .popup-buttons
-          margin-top 20px
-          .popup-btn
-            border 1px solid #ddd
-            transition all .2s
-            border-radius 4px
-            background-image linear-gradient(0deg,#f8f8f8,#fff)
-            margin 0 20px
-            padding 10px 40px
-            cursor pointer
-            display inline-block
-            min-height 2.2em
-            text-align center
-            letter-spacing 2px
-            font-family 10.81081081px,Microsoft Yahei,Tahoma,Arial,Helvetica,STHeiti
-            width auto
-            overflow visible
-            color #222
-            border-radius 5px
-            box-sizing border-box
-            &:hover
-              color #000
-              border-color #666
-          .popup-btn-primary
-            color #fff
-            background-color #00a0d8
-            border 1px solid #0082b0
-            vertical-align middle
-            background-image linear-gradient(0deg,#009cd6,#00aae0)
-            transition all .2s
-            &:hover
-              color #fff
-              border 1px solid #008bbc
-              background-image linear-gradient(0deg,#00a6dc,#00bee7)
 </style>

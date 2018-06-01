@@ -104,9 +104,6 @@ export default {
   props: {
     setTitleText: {
       type: Function
-    },
-    orderData: {
-      type: Object
     }
   },
   beforeMount () {

@@ -1,0 +1,64 @@
+{
+  "header": {
+    "isSuccess": 0,
+    "msg": ""
+  },
+  "body": [
+    {
+      "startstation": "广东省汽车客运站",
+      "endstation": "深圳湾口岸站",
+      "stationtype": 0,
+      "departuretime": 1527559162000,
+      "arrivaltime": 1527401000000,
+      "mileage": "56",
+      "price": 90,
+      "ticketsleft": 35,
+      "totalvotes": 48,
+      "comment": "大型座席高一级",
+      "trainid": 9,
+      "ticketid": 13
+    },
+    {
+      "startstation": "广东省汽车客运站1",
+      "endstation": "深圳湾口岸站1",
+      "stationtype": 0,
+      "departuretime": 1527595162000,
+      "arrivaltime": 1527401000000,
+      "mileage": "56",
+      "price": 90,
+      "ticketsleft": 35,
+      "totalvotes": 48,
+      "comment": "大型座席高一级",
+      "trainid": 9,
+      "ticketid": 13
+    },
+    {
+      "startstation": "广东省汽车客运站2",
+      "endstation": "深圳湾口岸站2",
+      "stationtype": 0,
+      "departuretime": 1527382724000,
+      "arrivaltime": 1527401000000,
+      "mileage": "56",
+      "price": 90,
+      "ticketsleft": 35,
+      "totalvotes": 48,
+      "comment": "大型座席高一级",
+      "trainid": 9,
+      "ticketid": 13
+    },
+    {
+      "startstation": "广东省汽车客运站",
+      "endstation": "深圳湾口岸站",
+      "stationtype": 0,
+      "departuretime": 1527382724000,
+      "arrivaltime": 1527401000000,
+      "mileage": "56",
+      "price": 90,
+      "ticketsleft": 35,
+      "totalvotes": 48,
+      "comment": "大型座席高一级",
+      "trainid": 9,
+      "ticketid": 13
+    }
+  ]
+}

@@ -5,7 +5,7 @@
     <h4 class="switch-tab-head">
       热门城市
       <span class="switch-tab-head-remark">
-        (可直接输入城市或城市拼音)
+        (可直接输入城市)
       </span>
     </h4>
     <div class="search-citys">
@@ -41,11 +41,11 @@
         <dl class="clearfix switch-block"
             v-for="(item, index) in showSelect"
             :key="'switch-block' + index">
-          <dt class="switch-title">{{ item.initial }}</dt>
-          <dd class="switch-def">
+          <dt class="switch-title" v-show="item.all.length > 0">{{ item.initial }}</dt>
+          <dd class="switch-def" v-show="item.all.length > 0">
             <span class="switch-item" v-for="(i, idx) in item.all"
                   :key="'switch-item' + idx"
-                  :title="i.showName"
+                  :title="i.name"
                   @click="chooseItem(cityType, i.name)">
               {{ i.name }}
             </span>
@@ -58,8 +58,20 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import { getCity } from '@/api/api'
 export default {
   name: 'switch-city',
+  beforeMount () {
+    getCity()
+      .then(data => {
+        if (data.header.isSuccess === 0) {
+          this.citys = data.body
+        } else {
+          console.log(data.header.msg)
+        }
+      })
+  },
   props: {
     cityType: {
       type: String,
@@ -76,7 +88,7 @@ export default {
   },
   data () {
     return {
-      citys: this.cityType === 'leave' ? require('./leaveCitys.json') : require('./arriveCitys.json'),
+      citys: {},
       selected: 'ABCDEF',
       switchTabItem: ['ABCDEF', 'GHJKLM', 'NPQRS', 'TWXYZ']
     }
@@ -84,14 +96,14 @@ export default {
   methods: {
     select (str) {
       this.selected = str
-      if (this.citys && this.citys.header.isSuccess) {
+      if (this.citys && this.citys.length) {
         let items = []
         for (let initial of str) {
           let item = {}
           item.initial = initial
           item.all = []
-          for (let i of this.citys.body) {
-            if (i.shortEnName[0].toUpperCase() === initial.toUpperCase()) {
+          for (let i of this.citys) {
+            if (i.initial[0].toUpperCase() === initial.toUpperCase()) {
               item.all.push(i)
             }
           }

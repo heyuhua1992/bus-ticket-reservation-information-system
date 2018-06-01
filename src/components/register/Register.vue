@@ -23,7 +23,8 @@ export default {
       // 存放用户的信息
       userMsg: {
         phone: '',
-        password: ''
+        password: '',
+        code: ''
       }
     }
   },

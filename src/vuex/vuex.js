@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const state = {
   // 是否登陆
   isLogin: false,
+  userInfo: {},
   checkFromServer: false,
   // 头组件是否需要背景图片、背景模糊，默认为false
   hasBlur: false,
@@ -15,12 +16,29 @@ const state = {
     // 到达城市
     arriveCity: '',
     // 出发时间,会被修改
-    startDateTime: new Date()
+    startDateTime: new Date(),
   },
   // 今天的时间
   today: new Date(),
   // 允许选取的日期范围，今天开始的，后60天内
-  ableRange: 60
+  ableRange: 60,
+  errorType: {
+    1: '1错误',
+    2: '2错误'
+  },
+  stationtype: { // 车站类型
+    0: '过路车',
+    1: '终点站'
+  },
+  ticketstatus: {
+    0: '退票',
+    1: '正常'
+  },
+  // 订单数据
+  orderData: {
+    header: {},
+    body: []
+  }
 }
 // 类似于计算属性的东西
 const getters = {}
@@ -54,7 +72,6 @@ const mutations = {
   },
   checkValidate (state, data) {
     if (data) {
-      console.log('正在向后台验证用户信息')
       state.checkFromServer = true
     } else {
       console.log('手机号码、密码输入有误')
@@ -68,6 +85,15 @@ const mutations = {
   },
   setStartDateTime (state, date) {
     state.searchMsg.startDateTime = date
+  },
+  setUserInfo (state, date) {
+    state.userInfo = date
+  },
+  clearUserInfo (state) {
+    state.userInfo = {}
+  },
+  setOrderData (state, data) {
+    state.orderData = data
   }
 }
 

@@ -1,0 +1,55 @@
+{
+  "header": {
+    "isSuccess": 0
+  },
+  "body": [
+    {
+      "id": 2,
+      "userid": 1,
+      "departuretime":1527681562000,
+      "creationtime": 1527270309000,
+      "money": 126,
+      "status": 1,
+      "taketicketname": "小明",
+      "idtype": "二代身份证",
+      "idnumber": "441885544878489965",
+      "phone": "13420173851"
+    },
+    {
+      "id": 3,
+      "userid": 1,
+      "departuretime":8137848755,
+      "creationtime": 1527272005000,
+      "money": 60,
+      "status": 2,
+      "taketicketname": "张三",
+      "idtype": "二代身份证",
+      "idnumber": "441885544878489965",
+      "phone": "13420173851"
+    },
+    {
+      "id": 4,
+      "userid": 1,
+      "departuretime":8137848755,
+      "creationtime": 1527273638000,
+      "money": 60,
+      "status": 0,
+      "taketicketname": "张三",
+      "idtype": "二代身份证",
+      "idnumber": "441885544878489965",
+      "phone": "13420173851"
+    },
+    {
+      "id": 5,
+      "userid": 1,
+      "departuretime":1527508762000,
+      "creationtime": 1527319708000,
+      "money": 60,
+      "status": 1,
+      "taketicketname": "张三",
+      "idtype": "二代身份证",
+      "idnumber": "441885544878489965",
+      "phone": "13420173851"
+    }
+  ]
+}

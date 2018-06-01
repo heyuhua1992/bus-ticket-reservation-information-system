@@ -17,8 +17,10 @@
              @mouseout="setHover(false)"
              @click.stop
              v-show="leaveCityBox">
-          <SwitchCity :cityType="'leave'"
-                      @setInputText="setInputText"/>
+          <keep-alive>
+            <SwitchCity :cityType="'leave'"
+                        @setInputText="setInputText"/>
+          </keep-alive>
         </div>
       </li>
       <li class="label">
@@ -35,7 +37,9 @@
              @mouseout="setHover(false)"
              @click.stop
              v-show="arriveCityBox">
-          <SwitchCity :cityType="'arrive'" @setInputText="setInputText"/>
+          <keep-alive>
+            <SwitchCity :cityType="'arrive'" @setInputText="setInputText"/>
+          </keep-alive>
         </div>
       </li>
       <li class="label">

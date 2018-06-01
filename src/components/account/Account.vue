@@ -47,7 +47,8 @@
           {{titleText}}
         </span>
       </div>
-      <router-view :orderData="orderData" :setTitleText="setTitleText"/>
+      <div class="loading-mark" :class="{hidMark: hidMark}">数据加载中。。。</div>
+      <router-view :setTitleText="setTitleText" :setHidMark="setHidMark"/>
     </div>
   </div>
 </div>
@@ -57,10 +58,27 @@
 import TopBanner from '@/components/topBanner/TopBanner'
 export default {
   name: 'account',
+  created () {
+    if (this.$Cookies.get('userCode') && !this.$store.state.isLogin) {
+      let tipsData = {
+        tips: '',
+        back: '/account/home',
+        wait: 200
+      }
+      this.$router.push({path: '/informationtips', query: tipsData})
+    } else if (!this.$Cookies.get('userCode') && !this.$store.state.isLogin) {
+      let tipsData = {
+        tips: '还没有登陆，3秒后返回首页,无反应可直接点击跳转',
+        back: '/',
+        wait: 3000
+      }
+      this.$router.push({path: '/informationtips', query: tipsData})
+    }
+  },
   data () {
     return {
       titleText: 'error',
-      orderData: require('./orderData')
+      hidMark: false
     }
   },
   methods: {
@@ -68,6 +86,9 @@ export default {
       this.titleText = text
     },
     selected () {
+    },
+    setHidMark (is) {
+      this.hidMark = is
     }
   },
   components: {
@@ -155,6 +176,7 @@ export default {
       border-left 1px solid #ddd
       background #fff
       min-height 890px!important
+      overflow auto
       .security-right-title
         height 50px
         padding-left 30px
@@ -172,4 +194,18 @@ export default {
           color #00a1d6
           font-size 14px
           cursor default
+      .loading-mark
+        position absolute
+        top 0
+        left 0
+        width 100%
+        min-height 100%
+        background-color #fff
+        text-align center
+        padding-top 200px
+        box-sizing border-box
+        font-size 30px
+        z-index 101
+        &.hidMark
+          display none
 </style>

@@ -27,61 +27,44 @@
          class="used"
          :class="{current: this.choose === 3}"
          @click="setChoose(3)">
-        已使用
+        已完成
         <span v-show="numbers.used !== 0">{{numbers.used}}</span>
       </a>
       <a href="javascript:;"
          class="cancel"
          :class="{current: this.choose === 4}"
          @click="setChoose(4)">
-        已取消
+        已过期
         <span v-show="numbers.cancel !== 0">{{numbers.cancel}}</span>
       </a>
     </div>
   </div>
   <div class="orders-list">
-    <OrderList :orderData="orderDataFilter"/>
+    <OrderList :orderData="orderDataFilter" @init="init"/>
   </div>
 </div>
 </template>
 
 <script>
 import OrderList from '@/components/orderList/OrderList'
+/* eslint-disable no-unused-vars */
+import { getOrders } from '@/api/api'
 export default {
   name: 'order',
   props: {
     setTitleText: {
       type: Function
     },
-    orderData: {
-      type: Object
+    setHidMark: {
+      type: Function
     }
   },
   beforeMount () {
-    this.setTitleText('我的订单')
-    if (this.orderData) {
-      this.$nextTick(() => {
-        let orders = this.orderData.orders
-        for (let i = 0; i < orders.length; ++i) {
-          this.numbers.all++
-          if (orders[i].orderState === '已取消') {
-            this.numbers.cancel++
-          } else if (orders[i].orderState === '已使用') {
-            this.numbers.used++
-          } else if (orders[i].orderState === '待支付') {
-            this.numbers.waitPay++
-          } else if (orders[i].orderState === '待出行') {
-            this.numbers.noTravel++
-          }
-        }
-      })
-    }
-    if (this.$route.query.choose) {
-      this.choose = this.$route.query.choose
-    }
+    this.init()
   },
   data () {
     return {
+      orderData: this.$store.state.orderData,
       numbers: {
         all: 0, // 全部订单
         waitPay: 0, // 待支付
@@ -95,29 +78,68 @@ export default {
   methods: {
     setChoose (num) {
       this.choose = num
+    },
+    init () {
+      this.setTitleText('我的订单')
+      let userid = this.$store.state.userInfo.id
+      getOrders({userid: userid})
+        .then(data => {
+          if (data.header.isSuccess !== 0) {
+            alert(data.header.msg)
+          }
+          this.$set(this, 'orderData', data)
+          if (this.orderData.header && this.orderData.header.isSuccess === 0) {
+            let orders = this.orderData.body
+            for (let i = 0; i < orders.length; ++i) {
+              this.numbers.all++
+              if (orders[i].status === '2' || orders[i].status === 2) {
+                this.numbers.cancel++
+              } else if (orders[i].status === '1' || orders[i].status === 1) {
+                let today = new Date()
+                if (today.getTime() >= (orders[i].departuretime - 0)) {
+                  this.numbers.used++
+                } else {
+                  this.numbers.noTravel++
+                }
+              } else if (orders[i].status === '0' || orders[i].status === 0) {
+                this.numbers.waitPay++
+              }
+            }
+          }
+          this.setHidMark(true)
+        })
+        .catch()
+      if (this.$route.query.choose) {
+        this.choose = this.$route.query.choose
+      }
     }
   },
   computed: {
     orderDataFilter () {
       let data = this.orderData
+      if (!data.body) {
+        return
+      }
       let newData = {}
       if (this.choose === 0) {
         return data
       } else if (this.choose === 1) {
-        newData.orders = data.orders.filter((item) => {
-          return item.orderState === '待支付'
+        newData.body = data.body.filter((item) => {
+          return item.status === 0 || item.status === '0'
         })
       } else if (this.choose === 2) {
-        newData.orders = data.orders.filter((item) => {
-          return item.orderState === '待出行'
+        newData.body = data.body.filter((item) => {
+          let day = new Date()
+          return (item.status === 1 || item.status === '1') && day.getTime() < item.departuretime
         })
       } else if (this.choose === 3) {
-        newData.orders = data.orders.filter((item) => {
-          return item.orderState === '已使用'
+        newData.body = data.body.filter((item) => {
+          let day = new Date()
+          return (item.status === 1 || item.status === '1') && day.getTime() >= item.departuretime
         })
       } else {
-        newData.orders = data.orders.filter((item) => {
-          return item.orderState === '已取消'
+        newData.body = data.body.filter((item) => {
+          return item.status === 2 || item.status === '2'
         })
       }
       return newData
@@ -164,5 +186,6 @@ export default {
   .orders-list
     margin-top 10px
     min-height 200px
+    height 100%
     width 100%
 </style>

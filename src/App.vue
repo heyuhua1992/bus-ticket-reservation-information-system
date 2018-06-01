@@ -9,14 +9,21 @@
 
 <script>
 import Navigation from '@/components/navigation/Navigation'
+/* eslint-disable no-unused-vars */
+import { requestLogin } from '@/api/api'
 export default {
   name: 'App',
   beforeMount () {
-    let cookieCode = JSON.parse(this.$Cookies.get('userCode'))
-    // 发送到服务器对比验证之后
-    if (cookieCode && cookieCode.isLogin === 'lkjhgfdsa') {
-      console.log(cookieCode.isLogin)
-      this.$store.dispatch('Login')
+    if (this.$Cookies.get('userCode') && !this.$store.state.isLogin) {
+      let cookieCode = JSON.parse(this.$Cookies.get('userCode'))
+      requestLogin(cookieCode).then(data => {
+        if (data.header.isSuccess === 0) {
+          this.$store.dispatch('Login')
+          this.$store.commit('setUserInfo', data.body[0])
+        } else {
+          alert(data.header.msg)
+        }
+      })
     }
   },
   data () {

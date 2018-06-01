@@ -67,8 +67,13 @@
 import TopBanner from '@/components/topBanner/TopBanner'
 import TitleLine from '@/components/titleLine/TitleLine'
 import GeetestNode from '@/components/geetestNode/GeetestNode'
+/* eslint-disable no-unused-vars */
+import { requestLogin } from '@/api/api'
 export default {
   name: 'login',
+  beforeMount () {
+    this.$Cookies.remove('userCode')
+  },
   data () {
     return {
       userMsg: {
@@ -84,23 +89,32 @@ export default {
       let data = this.$refs.getResult.result
       // 重置
       this.$store.state.checkFromServer = false
-      // todo：忘记下面这个什么用
+      // 校验人机验证是否通过 通过this.$store.state.checkFromServer得到结果
       this.$store.dispatch('checkValidate', data)
       if (this.isOk && data && this.$store.state.checkFromServer) {
-        let tipsData = {
-          tips: '登陆成功，3秒后返回首页,无反应可直接点击跳转',
-          back: '/',
-          wait: 3000
+        let userInfo = {
+          username: this.userMsg.phone,
+          password: this.userMsg.password
         }
-        this.$store.dispatch('Login')
-        if (this.checkbox) {
-          this.$Cookies.set('userCode', {
-            isLogin: 'lkjhgfdsa' // 从后台拿到的代码
-          }, { expires: 7 }) // 有效期7天
-          let a = this.$Cookies.get('userCode')
-          console.log(a, JSON.parse(a).isLogin)
-        }
-        this.$router.push({path: '/informationtips', query: tipsData})
+        requestLogin(userInfo).then(data => {
+          if (data.header.isSuccess === 0) {
+            let tipsData = {
+              tips: '登陆成功，3秒后返回首页,无反应可直接点击跳转',
+              back: '/',
+              wait: 3000
+            }
+            this.$store.dispatch('Login')
+            this.$store.commit('setUserInfo', data.body[0])
+            let str = JSON.stringify(userInfo)
+            if (this.checkbox) { // 选择了 记住登陆状态
+              this.$Cookies.set('userCode', str
+                , { expires: 7 }) // 有效期7天
+            }
+            this.$router.push({path: '/informationtips', query: tipsData})
+          } else {
+            alert(data.header.msg)
+          }
+        })
       }
     }
   },

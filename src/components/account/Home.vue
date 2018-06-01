@@ -67,49 +67,71 @@
 
 <script>
 import OrderList from '@/components/orderList/OrderList'
+/* eslint-disable no-unused-vars */
+import { getOrders } from '@/api/api'
 export default {
   name: 'home',
   props: {
     setTitleText: {
       type: Function
     },
-    orderData: {
-      type: Object
+    setHidMark: {
+      type: Function
     }
   },
   beforeMount () {
     this.setTitleText('首页')
-    this.initNumber()
+    this.getData()
   },
   data () {
     return {
+      orderData: this.$store.state.orderData,
       numbers: {
         all: 0, // 全部订单
         waitPay: 0, // 待支付
         noTravel: 0, // 待出行
-        used: 0, // 已使用
+        used: 0, // 已完成
         cancel: 0 // 已取消
       }
     }
   },
   methods: {
+    getData () {
+      let userid = this.$store.state.userInfo.id
+      this.setHidMark(false)
+      getOrders({userid: userid})
+        .then(data => {
+          if (data.header.isSuccess !== 0) {
+            alert(data.header.msg)
+          }
+          this.$store.commit('setOrderData', data)
+          this.$set(this, 'orderData', data)
+          this.initNumber()
+          this.setHidMark(true)
+        })
+        .catch()
+    },
     initNumber () {
-      if (this.orderData) {
-        this.$nextTick(() => {
-          let orders = this.orderData.orders
-          for (let i = 0; i < orders.length; ++i) {
-            this.numbers.all++
-            if (orders[i].orderState === '已取消') {
-              this.numbers.cancel++
-            } else if (orders[i].orderState === '已使用') {
+      if (this.orderData.header.isSuccess === 0) {
+        let orders = this.orderData.body
+        if (!orders.length) {
+          return
+        }
+        for (let i = 0; i < orders.length; ++i) {
+          this.numbers.all++
+          if (orders[i].status === '2' || orders[i].status === 2) {
+            this.numbers.cancel++
+          } else if (orders[i].status === '1' || orders[i].status === 1) {
+            let today = new Date()
+            if (today.getTime() >= (orders[i].departuretime - 0)) {
               this.numbers.used++
-            } else if (orders[i].orderState === '待支付') {
-              this.numbers.waitPay++
-            } else if (orders[i].orderState === '待出行') {
+            } else {
               this.numbers.noTravel++
             }
+          } else if (orders[i].status === '0' || orders[i].status === 0) {
+            this.numbers.waitPay++
           }
-        })
+        }
       }
     }
   },

@@ -58,8 +58,12 @@ let routes = [
       {
         path: 'general',
         component: resolve => require(['@/components/account/General'], resolve)
-      }
+      },
     ]
+  },
+  {
+    path: '/announcementdetails',
+    component: resolve => require(['@/components/announcementDetails/AnnouncementDetails'], resolve)
   }
 ]
 export default new VueRouter({

@@ -1,0 +1,86 @@
+{
+    "header": {
+        "isSuccess": 0,
+        "msg": ""
+    },
+    "body": [
+        {
+            "id": 1,
+            "provinceid": 1,
+            "name": "朝阳",
+            "initial": "C"
+        },
+        {
+            "id": 2,
+            "provinceid": 1,
+            "name": "通州",
+            "initial": "T"
+        },
+        {
+            "id": 3,
+            "provinceid": 1,
+            "name": "房山",
+            "initial": "F"
+        },
+        {
+            "id": 4,
+            "provinceid": 1,
+            "name": "昌平",
+            "initial": "C"
+        },
+        {
+            "id": 5,
+            "provinceid": 2,
+            "name": "东莞",
+            "initial": "D"
+        },
+        {
+            "id": 6,
+            "provinceid": 2,
+            "name": "广州",
+            "initial": "G"
+        },
+        {
+            "id": 7,
+            "provinceid": 2,
+            "name": "中山",
+            "initial": "Z"
+        },
+        {
+            "id": 8,
+            "provinceid": 2,
+            "name": "深圳",
+            "initial": "S"
+        },
+        {
+            "id": 9,
+            "provinceid": 3,
+            "name": "济南",
+            "initial": "J"
+        },
+        {
+            "id": 10,
+            "provinceid": 3,
+            "name": "青岛",
+            "initial": "Q"
+        },
+        {
+            "id": 11,
+            "provinceid": 3,
+            "name": "烟台",
+            "initial": "Y"
+        },
+        {
+            "id": 12,
+            "provinceid": 4,
+            "name": "苏州",
+            "initial": "S"
+        },
+        {
+            "id": 13,
+            "provinceid": 4,
+            "name": "徐州",
+            "initial": "X"
+        }
+    ]
+}
